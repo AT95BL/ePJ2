@@ -15,10 +15,15 @@ public abstract class Vehicle implements Serializable{
     double maxSpeed;
     String description;
     String type;
-	protected double currentBatteryLevel = 100; // samo priveremeno dok ne osmislim klasu baterija..
+    double currentBatteryLevel = 100; // samo priveremeno dok ne osmislim klasu baterija..
 	
+	int positionX;	//	rows
+	int positionY;	//	columns
+	
+	// Constructor
 	public Vehicle() {}
 	
+	// Constructor
 	public Vehicle(
 			String id, 
 			String manufacturer, 
@@ -40,6 +45,14 @@ public abstract class Vehicle implements Serializable{
 		this.description=description;
 		this.type=type;
 	}
+	
+	// getters and setters
+	public int getPositionX() {return this.positionX;}
+	public void setPositionX(int x) {this.positionX=x;}
+	public int getPositionY() {return this.positionY;}
+	public void setPositionY(int y) {this.positionY=y;}
+	public void setLocation(int x, int y) {	setPositionX(x); setPositionY(y); }
+	//	getLocation()?
 	
 	@Override
 	public String toString() {

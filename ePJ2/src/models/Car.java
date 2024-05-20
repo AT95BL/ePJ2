@@ -3,6 +3,10 @@ package models;
 import java.util.Date;
 
 public class Car extends Vehicle{
+	private static final int MAX_NUMBER_OF_PASSENGERS=5;
+	
+	int numberOfPassengers=0;
+	
 
 public Car() {super();}
 	
