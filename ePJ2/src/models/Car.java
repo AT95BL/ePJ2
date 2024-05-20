@@ -1,12 +1,14 @@
 package models;
 
 import java.util.Date;
+import java.util.ArrayList;
+
+import person.*;
 
 public class Car extends Vehicle{
 	private static final int MAX_NUMBER_OF_PASSENGERS=5;
-	
 	int numberOfPassengers=0;
-	
+	ArrayList<Person> passengers = new ArrayList<>();
 
 public Car() {super();}
 	
