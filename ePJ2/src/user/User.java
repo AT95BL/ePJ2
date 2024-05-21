@@ -1,12 +1,12 @@
-package person;
+package user;
 
-public abstract class Person {
+public abstract class User {
     protected String id;
     protected String name;
     protected String address;
     
     // Constructor
-    public Person(String id, String name, String address) {
+    public User(String id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;

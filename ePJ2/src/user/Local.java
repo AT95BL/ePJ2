@@ -1,6 +1,6 @@
-package person;
+package user;
 
-public class Local extends Person {
+public class Local extends User {
     private String nationalId;
 
     // Constructor

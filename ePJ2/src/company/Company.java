@@ -1,4 +1,4 @@
-package simulation;
+package company;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,18 +10,22 @@ import java.text.ParseException;
 import models.*;
 import data.*;
 
-public class Simulation {
+public class Company {
 	
 	public static final int NUMBER_OF_ROWS=20;
 	public static final int NUMBER_OF_COLUMNS=20;
-	public static Object[][] map;						//	static object!! Use Simulation.map for calling it!!
+	public static final int WIDER_PART_OF_THE_CITY_LOWER_BOUND=0;
+	public static final int WIDER_PART_OF_THE_CITY_UPPER_BOUND=10;
+	public static Object[][] map;										//	static object!! Use Simulation.map for calling it!!
 	
-	public List<Vehicle> vehicles;
-	public VehicleDataLoader vdl ;						// short/nice name
+	public List<Vehicle> vehicles;										//	vehicles container
+	public VehicleDataLoader vdl ;										// short/nice name
 	
 	Random random = new Random();
 	
-	public Simulation() {
+	
+	// Constructor
+	public Company() {
 		map = new Object[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
 		this.vehicles = new ArrayList<>();
 		this.vdl = new VehicleDataLoader();

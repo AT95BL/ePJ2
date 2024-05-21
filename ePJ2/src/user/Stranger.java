@@ -1,6 +1,6 @@
-package person;
+package user;
 
-public class Stranger extends Person {
+public class Stranger extends User {
     private String passportNumber;
 
     // Constructor

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-import simulation.Simulation; // because of Simulation.map
-import person.*;
+import company.Company;
+import user.*;
 
 public abstract class Vehicle implements Serializable{
     String id;
@@ -22,8 +22,13 @@ public abstract class Vehicle implements Serializable{
     String type;
     double currentBatteryLevel = 100; // samo priveremeno dok ne osmislim klasu baterija..
 	
-	int positionX;	//	rows
-	int positionY;	//	columns
+	int positionX;			//	rows
+	int positionY;			//	columns
+	int startingPositionX;
+	int startingPositionY;
+	int destinationPointX;
+	int destinationPointY;
+	
 	
 	public static final String MESSAGE_LEFT = "Cannot move left. Position is out of bounds.";
 	public static final String MESSAGE_RIGHT = "Cannot move right. Position is out of bounds.";
@@ -32,7 +37,7 @@ public abstract class Vehicle implements Serializable{
 	
 	public boolean rentFree=true;
 	
-	ArrayList<Person> passengers = new ArrayList<>();
+	ArrayList<User> passengers = new ArrayList<>();
 	
 	// Constructor
 	public Vehicle() {}
@@ -73,21 +78,21 @@ public abstract class Vehicle implements Serializable{
         if (this.positionX == 0) {
             throw new IndexOutOfBoundsException(MESSAGE_LEFT);
         }
-        if (Simulation.isCellClear(this.positionX - 1, this.positionY)) {
-            Simulation.clearCell(this.positionX, this.positionY);
+        if (Company.isCellClear(this.positionX - 1, this.positionY)) {
+            Company.clearCell(this.positionX, this.positionY);
             this.positionX--;
-            Simulation.updateCell(this.positionX, this.positionY, this);
+            Company.updateCell(this.positionX, this.positionY, this);
         }
     }
 
     public void moveRight() {
-        if (this.positionX == Simulation.NUMBER_OF_COLUMNS - 1) {
+        if (this.positionX == Company.NUMBER_OF_COLUMNS - 1) {
             throw new IndexOutOfBoundsException(MESSAGE_RIGHT);
         }
-        if (Simulation.isCellClear(this.positionX + 1, this.positionY)) {
-            Simulation.clearCell(this.positionX, this.positionY);
+        if (Company.isCellClear(this.positionX + 1, this.positionY)) {
+            Company.clearCell(this.positionX, this.positionY);
             this.positionX++;
-            Simulation.updateCell(this.positionX, this.positionY, this);
+            Company.updateCell(this.positionX, this.positionY, this);
         }
     }
 
@@ -95,31 +100,31 @@ public abstract class Vehicle implements Serializable{
         if (this.positionY == 0) {
             throw new IndexOutOfBoundsException(MESSAGE_UP);
         }
-        if (Simulation.isCellClear(this.positionX, this.positionY - 1)) {
-            Simulation.clearCell(this.positionX, this.positionY);
+        if (Company.isCellClear(this.positionX, this.positionY - 1)) {
+            Company.clearCell(this.positionX, this.positionY);
             this.positionY--;
-            Simulation.updateCell(this.positionX, this.positionY, this);
+            Company.updateCell(this.positionX, this.positionY, this);
         }
     }
 
     public void moveDown() {
-        if (this.positionY == Simulation.NUMBER_OF_ROWS - 1) {
+        if (this.positionY == Company.NUMBER_OF_ROWS - 1) {
             throw new IndexOutOfBoundsException(MESSAGE_DOWN);
         }
-        if (Simulation.isCellClear(this.positionX, this.positionY + 1)) {
-            Simulation.clearCell(this.positionX, this.positionY);
+        if (Company.isCellClear(this.positionX, this.positionY + 1)) {
+            Company.clearCell(this.positionX, this.positionY);
             this.positionY++;
-            Simulation.updateCell(this.positionX, this.positionY, this);
+            Company.updateCell(this.positionX, this.positionY, this);
         }
     }
 	
 	// add/remove passenger methods
-    public void addPassenger(Person person) {this.passengers.add(person); }
+    public void addPassenger(User person) {this.passengers.add(person); }
     
-    public synchronized void removePassenger(Person person) {
-        Iterator<Person> iterator = this.passengers.iterator();
+    public synchronized void removePassenger(User person) {
+        Iterator<User> iterator = this.passengers.iterator();
         while (iterator.hasNext()) {
-            Person p = iterator.next();
+            User p = iterator.next();
             if (p.getId() == person.getId()) { 	// Assuming getId() returns an int
                 iterator.remove();
                 break; 							// Assuming IDs are unique, we can exit the loop after removing the person
