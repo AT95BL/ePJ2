@@ -37,7 +37,7 @@ public class Simulation {
 		}
 	}
 	
-	// post those vehicles to the map ..
+	// post those vehicles to the map ..starting point should be read from the .csv file??
 	public void putVehiclesRandom() {
 		
 		for(var vehicle:this.vehicles) {
@@ -55,6 +55,10 @@ public class Simulation {
 			map[positionX][positionY] = vehicle;
 		}
 	}
+	
+	//	
+	public void setDestinations() {}
+	
 	
 	
 	public void printMatrix() {

@@ -120,14 +120,13 @@ public abstract class Vehicle implements Serializable{
         Iterator<Person> iterator = this.passengers.iterator();
         while (iterator.hasNext()) {
             Person p = iterator.next();
-            if (p.getId() == person.getId()) { // Assuming getId() returns an int
+            if (p.getId() == person.getId()) { 	// Assuming getId() returns an int
                 iterator.remove();
-                break; // Assuming IDs are unique, we can exit the loop after removing the person
+                break; 							// Assuming IDs are unique, we can exit the loop after removing the person
             }
         }
     }
-    
-    
+     
     // Overrides ..
 	@Override
 	public String toString() {
