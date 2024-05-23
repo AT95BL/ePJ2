@@ -49,13 +49,27 @@ public class Main {
 		}
 		
 		for(var temp1: listOfRentals) {
-			String id = temp1.getVehicleID();
-			for(var temp2: listOfVehicles) {
-				if(temp2.id.equals(id)) {
-					temp2.start();
-				}
-			}
 			
+			String id = temp1.getVehicleID();
+			
+			for(var temp2: listOfVehicles) {
+				// ISKORISTI MAPU ZA PRETRAŽIVANJE!! -UBRZAJ PROGRAM!
+				if(temp2.id.equals(id)) {
+					temp2.setStartingPositionX(temp1.getStartX());
+					temp2.setStartingPositionY(temp1.getStartY());
+					temp2.setPositionX(temp1.getStartX());
+					temp2.setPositionY(temp1.getStartY());
+					temp2.setDestinationPositionX(temp1.getEndX());
+					temp2.setDestinationPositionY(temp1.getEndY());
+					temp2.setDruration(temp1.getDuration());
+					temp2.start();
+					try {
+						temp2.join();
+					}catch(InterruptedException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}			
 		}
 	}
 }

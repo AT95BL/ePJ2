@@ -134,7 +134,7 @@ public abstract class Vehicle extends Thread implements Serializable{
         }
     }
     
-    public void move(int x1, int y1, int x2, int y2) {
+    public synchronized void move(int x1, int y1, int x2, int y2) {
         if (!CityMap.arePointsOpposite(x1, y1, x2, y2)) {
             throw new IllegalArgumentException("Tačke nisu jedna naspram druge!");
         }
@@ -178,10 +178,32 @@ public abstract class Vehicle extends Thread implements Serializable{
     
     // Overrides ..
     @Override
-    public void start() { 
-    	System.out.println("Till I cry myself to sleep ...\n");
-    	return;
+    public void run() {
+        // Odredišnoj tački je stiglo vozilo, ne treba se kretati
+        if (positionX == destinationPositionX && positionY == destinationPositionY) {
+            System.out.println("Vozilo " + id + " je već stiglo na odredišnu tačku.");
+            return;
+        }
+
+        // Pokretanje vozila od početne tačke prema odredišnoj tački tokom određenog vremena
+        int remainingDuration = duration;
+        while (remainingDuration > 0) {
+            // Kretnja vozila prema odredišnoj tački
+            move(startingPositionX, startingPositionY, destinationPositionX, destinationPositionY);
+
+            // Smanjenje preostalog trajanja za jednu sekundu
+            remainingDuration--;
+
+            // Pauza od jedne sekunde prije nastavka kretanja
+            try {
+                Thread.sleep(1000); // Spavanje od jedne sekunde
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Vozilo " + id + " je stiglo na odredišnu tačku.");
     }
+
     
 	@Override
 	public String toString() {
@@ -200,4 +222,9 @@ public abstract class Vehicle extends Thread implements Serializable{
 	
 	// getters && setters
 	public String getID() {return this.id;}
+	
+	
+	// nove ideje
+	int duration;
+	public void setDruration(int duration) {this.duration=duration;}
 }
