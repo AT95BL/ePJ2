@@ -9,6 +9,7 @@ import java.util.List;
 
 public class TestRentalDataLoader {
 	
+	/*
     public static void main(String[] args) {
         RentalDataLoader loader = new RentalDataLoader();
         try {
@@ -20,4 +21,5 @@ public class TestRentalDataLoader {
             e.printStackTrace();
         }
     }
+    */
 }

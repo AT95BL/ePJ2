@@ -40,8 +40,8 @@ public class RentalDataLoader {
                 }
                 String user = record[1];
                 String vehicleId = record[2];
-                String startLocation = record[3].replace("\"", ""); // Remove quotes
-                String endLocation = record[4].replace("\"", "");   // Remove quotes
+                String startLocation = record[3].replace("\"", ""); 	// Remove quotes
+                String endLocation = record[4].replace("\"", "");   	// Remove quotes
                 int duration = Integer.parseInt(record[5]);
                 boolean malfunction = record[6].equalsIgnoreCase("da");
                 boolean promotion = record[7].equalsIgnoreCase("da");
@@ -54,7 +54,7 @@ public class RentalDataLoader {
             }
         }
         
-     // Sortiranje liste prije nego što je vratimo
+        // Sortiranje liste prije nego što je vratimo
         Collections.sort(rentals, Comparator.comparing(Rental::getDate));
         
         return rentals;

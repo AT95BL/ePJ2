@@ -12,21 +12,21 @@ import user.*;
 
 public abstract class Vehicle extends Thread implements Serializable{
 	// system messages
-	public static final String MESSAGE_LEFT = "Cannot move left. Position is out of bounds.";
-	public static final String MESSAGE_RIGHT = "Cannot move right. Position is out of bounds.";
-	public static final String MESSAGE_UP = "Cannot move upward. Position is out of bounds.";
-	public static final String MESSAGE_DOWN = "Cannot move downward. Position is out of bounds.";
+	private static final String MESSAGE_LEFT = "Cannot move left. Position is out of bounds.";
+	private static final String MESSAGE_RIGHT = "Cannot move right. Position is out of bounds.";
+	private static final String MESSAGE_UP = "Cannot move upward. Position is out of bounds.";
+	private static final String MESSAGE_DOWN = "Cannot move downward. Position is out of bounds.";
 	
-    String id;
-    String manufacturer;					//	proizvodjac
-    String model;
-    Date purchaseDate;
-    double purchasePrice;
-    double autonomyOrMaxSpeed;				//	autonomija
-    double maxSpeed;
-    String description;
-    String type;
-    double currentBatteryLevel = 100; 		// samo priveremeno dok ne osmislim klasu baterija..
+    public String id;
+    public String manufacturer;						//	proizvodjac
+    public String model;
+    public Date purchaseDate;
+    public double purchasePrice;
+    public double autonomyOrMaxSpeed;				//	autonomija
+    public double maxSpeed;
+    public String description;
+    public String type;
+    public double currentBatteryLevel = 100; 		// samo priveremeno dok ne osmislim klasu baterija..
 	
     //	vehicle map-coordinates
 	int positionX;							//	rows
@@ -36,7 +36,7 @@ public abstract class Vehicle extends Thread implements Serializable{
 	int destinationPositionX;
 	int destinationPositionY;
 	
-	public boolean rentFree=true;			//	mozda zatreba
+	public Move moveDirection;						//	move-direction
 	
 	ArrayList<User> passengers = new ArrayList<>();
 	int numberOfPassengers=0;
@@ -67,24 +67,22 @@ public abstract class Vehicle extends Thread implements Serializable{
 		this.type=type;
 	}
 	
-	//	O SVIM OGRANICENJIMA MAPE -POBRINUCU SE U MAPI!!
-	
-	//  current position getters and setters 
+	//  vehicle current position getters and setters 
 	public int getPositionX() {return this.positionX;}
 	public void setPositionX(int x) {this.positionX=x;}
 	public int getPositionY() {return this.positionY;}
 	public void setPositionY(int y) {this.positionY=y;}
 	
-	// public void setLocation(int x, int y) {	setPositionX(x); setPositionY(y); }
+	// 	public void setLocation(int x, int y) {	setPositionX(x); setPositionY(y); }
 	//	getLocation()?
 	
-	// start-postion getters/setters -rename them!!
+	// vehicle start-postion getters/setters -rename them!!
 	public int getStartingPositionX() {return this.startingPositionX;}
 	public void setStartingPositionX(int x) {this.startingPositionX=x;}
 	public int getStartingPositionY() {return this.startingPositionY;}
 	public void setStartingPositionY(int y) {this.startingPositionY=y;}
 	
-	// destination-position getters/setters -rename them!!
+	// vehicle destination-position getters/setters -rename them!!
 	public int getDestinationPositionX() {return this.destinationPositionX;}
 	public void setDestinationPositionX(int x) {this.destinationPositionX=x;}
 	public int getDestinationPositionY() {return this.destinationPositionY;}
@@ -135,6 +133,34 @@ public abstract class Vehicle extends Thread implements Serializable{
             CityMap.updateCell(this.positionX, this.positionY, this);
         }
     }
+    
+    public void move(int x1, int y1, int x2, int y2) {
+        if (!CityMap.arePointsOpposite(x1, y1, x2, y2)) {
+            throw new IllegalArgumentException("Tačke nisu jedna naspram druge!");
+        }
+
+        // Postavljanje početne pozicije vozila, višak?
+        this.positionX = x1;
+        this.positionY = y1;
+
+        // Horizontalno kretanje
+        while (this.positionX != x2) {
+            if (x2 > this.positionX) {
+                moveRight();
+            } else {
+                moveLeft();
+            }
+        }
+
+        // Vertikalno kretanje
+        while (this.positionY != y2) {
+            if (y2 > this.positionY) {
+                moveDown();
+            } else {
+                moveUp();
+            }
+        }
+    }
 	
 	// add/remove passengers methods:
     public synchronized void addPassenger(User person) {this.passengers.add(person); }
@@ -149,11 +175,12 @@ public abstract class Vehicle extends Thread implements Serializable{
             }
         }
     }
-     
+    
     // Overrides ..
     @Override
     public void start() { 
     	System.out.println("Till I cry myself to sleep ...\n");
+    	return;
     }
     
 	@Override
@@ -170,4 +197,7 @@ public abstract class Vehicle extends Thread implements Serializable{
 				+ "Type: " + this.type + "\n"
 				+ "Battery Status: " + this.currentBatteryLevel + "\n";
 	}
+	
+	// getters && setters
+	public String getID() {return this.id;}
 }

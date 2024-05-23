@@ -74,8 +74,17 @@ public class Rental {
         return endY;
     }
     
+    // Getteri za stare varijable
     public Date getDate() {
     	return this.date;
+    }
+    
+    public String getVehicleID() {
+    	return this.vehicleId;
+    }
+    
+    public int getDuration() {
+    	return this.duration;
     }
 
     @Override
