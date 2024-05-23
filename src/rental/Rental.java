@@ -73,6 +73,10 @@ public class Rental {
     public int getEndY() {
         return endY;
     }
+    
+    public Date getDate() {
+    	return this.date;
+    }
 
     @Override
     public String toString() {

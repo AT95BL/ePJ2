@@ -10,12 +10,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class RentalDataLoader {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d.M.yyyy HH:mm");
 
     public List<Rental> loadRentals(String filePath) throws IOException, ParseException {
         List<Rental> rentals = new ArrayList<>();
+        HashSet<Date> uniqueDates = new HashSet<>(); // Set za praćenje jedinstvenih datuma
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line = br.readLine(); // Read header
@@ -27,6 +31,13 @@ public class RentalDataLoader {
                 }
 
                 Date date = DATE_FORMAT.parse(record[0]);
+                // Provjera je li datum već dodan
+                if (uniqueDates.contains(date)) {
+                    System.err.println("Duplicate date record: " + line);
+                    continue;
+                } else {
+                    uniqueDates.add(date);
+                }
                 String user = record[1];
                 String vehicleId = record[2];
                 String startLocation = record[3].replace("\"", ""); // Remove quotes
@@ -42,6 +53,10 @@ public class RentalDataLoader {
                 }
             }
         }
+        
+     // Sortiranje liste prije nego što je vratimo
+        Collections.sort(rentals, Comparator.comparing(Rental::getDate));
+        
         return rentals;
     }
 }
