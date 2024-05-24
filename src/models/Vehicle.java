@@ -90,7 +90,7 @@ public abstract class Vehicle extends Thread implements Serializable{
 	
 	
 	// moving methods --just a basics for now, 	WATCH FOR INDEX OUT OF BOUNDS ERROR!!
-	public void moveLeft() {
+	public synchronized void moveLeft() {
         if (this.positionX == 0) {
             throw new IndexOutOfBoundsException(MESSAGE_LEFT);
         }
@@ -101,7 +101,7 @@ public abstract class Vehicle extends Thread implements Serializable{
         }
     }
 
-    public void moveRight() {
+    public synchronized void moveRight() {
         if (this.positionX == CityMap.NUMBER_OF_COLUMNS - 1) {
             throw new IndexOutOfBoundsException(MESSAGE_RIGHT);
         }
@@ -112,7 +112,7 @@ public abstract class Vehicle extends Thread implements Serializable{
         }
     }
 
-    public void moveUp() {
+    public synchronized void moveUp() {
         if (this.positionY == 0) {
             throw new IndexOutOfBoundsException(MESSAGE_UP);
         }
@@ -123,7 +123,7 @@ public abstract class Vehicle extends Thread implements Serializable{
         }
     }
 
-    public void moveDown() {
+    public synchronized void moveDown() {
         if (this.positionY == CityMap.NUMBER_OF_ROWS - 1) {
             throw new IndexOutOfBoundsException(MESSAGE_DOWN);
         }
@@ -135,9 +135,15 @@ public abstract class Vehicle extends Thread implements Serializable{
     }
     
     public synchronized void move(int x1, int y1, int x2, int y2) {
-        if (!CityMap.arePointsOpposite(x1, y1, x2, y2)) {
+        
+    	/*
+    	if (!CityMap.arePointsOpposite(x1, y1, x2, y2)) {
             throw new IllegalArgumentException("Tačke nisu jedna naspram druge!");
+            
+            Mislio sam da se vozila smiju kretati iskljucivo H/V tako da sam dijagonalne 
+            putanje u prvoj verziji aplikacije tretirao kao izuzetke..
         }
+        */
 
         // Postavljanje početne pozicije vozila, višak?
         this.positionX = x1;
@@ -226,5 +232,5 @@ public abstract class Vehicle extends Thread implements Serializable{
 	
 	// nove ideje
 	int duration;
-	public void setDruration(int duration) {this.duration=duration;}
+	public void setDuration(int duration) {this.duration=duration;}
 }

@@ -23,6 +23,8 @@ public class Main {
 		List<Vehicle> listOfVehicles = null;
 		List<Rental> listOfRentals = null;
 		
+		CityMap javaCityMap = new CityMap();
+		
 		try {
             listOfVehicles = vehicleDataLoader.loadVehicles("C:\\Users\\Korisnik.DESKTOP-JVOQTMK\\Desktop\\pj2_project\\PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv");
             for (Vehicle vehicle : listOfVehicles) {
@@ -61,7 +63,7 @@ public class Main {
 					temp2.setPositionY(temp1.getStartY());
 					temp2.setDestinationPositionX(temp1.getEndX());
 					temp2.setDestinationPositionY(temp1.getEndY());
-					temp2.setDruration(temp1.getDuration());
+					temp2.setDuration(temp1.getDuration());
 					temp2.start();
 					try {
 						temp2.join();
