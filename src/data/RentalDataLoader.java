@@ -19,8 +19,9 @@ public class RentalDataLoader {
 
     public List<Rental> loadRentals(String filePath) throws IOException, ParseException {
         List<Rental> rentals = new ArrayList<>();
-        HashSet<Date> uniqueDates = new HashSet<>(); // Set za praćenje jedinstvenih datuma
-
+        HashSet<Date> uniqueDates = new HashSet<>();		 // Set za praćenje jedinstvenih datuma
+        HashSet<String> uniqueVehicleIDs = new HashSet<>();  // Set za praćenje jedinstvenih ID
+        
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line = br.readLine(); // Read header
             while ((line = br.readLine()) != null) {
@@ -31,15 +32,18 @@ public class RentalDataLoader {
                 }
 
                 Date date = DATE_FORMAT.parse(record[0]);
-                // Provjera je li datum već dodan
-                if (uniqueDates.contains(date)) {
-                    System.err.println("Duplicate date record: " + line);
+                String vehicleId = record[2];
+                // Provjera je li datum i vehicleID već dodan
+                if (uniqueDates.contains(date) && uniqueVehicleIDs.contains(vehicleId)) {
+                    System.err.println("Duplicate date && vehicle ID record: " + line);
                     continue;
                 } else {
                     uniqueDates.add(date);
+                    uniqueVehicleIDs.add(vehicleId);
+                    
                 }
                 String user = record[1];
-                String vehicleId = record[2];
+                
                 String startLocation = record[3].replace("\"", ""); 	// Remove quotes
                 String endLocation = record[4].replace("\"", "");   	// Remove quotes
                 int duration = Integer.parseInt(record[5]);
