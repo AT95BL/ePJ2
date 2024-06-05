@@ -2,8 +2,8 @@ package model;
 
 import java.util.Date;
 
-import user.*;
 import battery.*;
+import passenger.*;
 
 import java.util.ArrayList;
 

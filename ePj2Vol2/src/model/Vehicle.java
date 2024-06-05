@@ -8,11 +8,10 @@ import java.io.Serializable;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-// user library
-import user.*;
 import battery.*;
 import javacitymap.JavaCityMap;
 import malfunction.*;
+import passenger.*;
 
 public abstract class Vehicle extends Thread implements Serializable {
     // system messages --NE OBRAĆAJ PAŽNJU!!
@@ -49,7 +48,7 @@ public abstract class Vehicle extends Thread implements Serializable {
 
     // passengers info
     public int numberOfPassengers;
-    public List<User> listOfPassengers = new ArrayList<>();
+    public List<Passenger> listOfPassengers = new ArrayList<>();
     
     private static final ReentrantLock classLock = new ReentrantLock();
     
@@ -252,14 +251,18 @@ public abstract class Vehicle extends Thread implements Serializable {
     }
 
     // Getter i setter metode za 'listOfPassengers'
-    public List<User> getListOfPassengers() {
+    public List<Passenger> getListOfPassengers() {
         return listOfPassengers;
     }
 
-    public void setListOfPassengers(List<User> listOfPassengers) {
+    public void setListOfPassengers(List<Passenger> listOfPassengers) {
         this.listOfPassengers = listOfPassengers;
     }
-
+    
+    public void addPassenger(Passenger passenger) {
+    	this.listOfPassengers.add(passenger);
+    }
+    
     public long getDuration() {
         return this.duration;
     }
@@ -399,6 +402,12 @@ public abstract class Vehicle extends Thread implements Serializable {
     // Overrides:
     @Override
     public String toString() {
+    	
+    	String passengers = "";
+    	for(var passenger:this.listOfPassengers) {
+    		passengers += passenger + " ";
+    	}
+    	
         return
                 "Vehicle: " + this.vehicleId + "\n"
                         + "Manufacturer: " + this.manufacturer + "\n"
@@ -415,6 +424,7 @@ public abstract class Vehicle extends Thread implements Serializable {
                         + "Current Position [X][Y]: " + "[" + this.positionX + "][" + this.positionY + "]" + "\n"
                         + "Destination Position X: " + this.destinationPositionX + "\n"
                         + "Destination Position Y: " + this.destinationPositionY + "\n"
+                        + "Passenger: " + (this.listOfPassengers.isEmpty() == true ? MESSAGE_UNKNOWN : passengers)
                         + "\n";
     }
 

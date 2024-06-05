@@ -4,15 +4,20 @@ import javacitymap.*;
 import malfunction.Malfunction;
 import rental.*;
 import model.*;
+import passenger.*;
 import data.*;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Random;
 import java.util.HashMap;
 import java.io.IOException;
 import java.text.ParseException;
 
 public class Proba {
+	
+	private static int passengerCounter=1;
+	
 	public static void main(String[] args) {
 		VehicleDataLoader vehicleDataLoader = new VehicleDataLoader();
 		RentalDataLoader rentalDataLoader = new RentalDataLoader();
@@ -21,6 +26,8 @@ public class Proba {
 		List<Rental> listOfRentals = null;
 		
 		JavaCityMap javaCityMap = new JavaCityMap();
+		
+		Random random = new Random();
 		
 		try {
 			listOfVehicles = vehicleDataLoader.loadVehicles("PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv");
@@ -69,6 +76,15 @@ public class Proba {
 		        }
 
 		        if (vehicle.getState() == Thread.State.NEW) {
+		        	  Passenger passenger = null;
+		        	  int temp = random.nextInt(100);
+		        	  if( temp % 2 == 0) {
+		        		  passenger = new Local(rental.getUserName(), "PASSENGER" + passengerCounter, "ADDRESS" + passengerCounter);
+		        	  }
+		        	  else {
+		        		  passenger = new Stranger(rental.getUserName(), "PASSENGER" + passengerCounter, "ADDRESS" + passengerCounter);
+		        	  }
+		        	  vehicle.addPassenger(passenger);
 		        	  JavaCityMap.updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle);
 				      System.out.println(vehicle);
 				      vehicle.start();
