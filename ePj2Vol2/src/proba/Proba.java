@@ -6,6 +6,7 @@ import rental.*;
 import model.*;
 import passenger.*;
 import data.*;
+import utility.*;
 
 import java.util.Map;
 import java.util.List;
@@ -28,6 +29,9 @@ public class Proba {
 		JavaCityMap javaCityMap = new JavaCityMap();
 		
 		Random random = new Random();
+		
+		ConfigFileCreator configFileCreator = new ConfigFileCreator();
+		configFileCreator.createConfigFile();
 		
 		try {
 			listOfVehicles = vehicleDataLoader.loadVehicles("PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv");
