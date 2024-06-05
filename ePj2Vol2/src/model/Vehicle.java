@@ -21,6 +21,7 @@ public abstract class Vehicle extends Thread implements Serializable {
     private static final String MESSAGE_UP = "Cannot move upward. Position is out of bounds.";
     private static final String MESSAGE_DOWN = "Cannot move downward. Position is out of bounds.";
     private static final String MESSAGE_UNKNOWN = "UNKNOWN";
+    private static final int	MESSAGE_BATTERY_LEAK = 2;
 
     // class attributes according to the given-task
     public String vehicleId;                // 1
@@ -452,10 +453,12 @@ public abstract class Vehicle extends Thread implements Serializable {
                 	System.out.println("MOVING DOWN \n" + (++iWillDoTheCounting));
                 	// System.out.println(JavaCityMap.map[this.positionX][this.positionY]);
                     moveDown();
+                    this.battery.decreasing((double)MESSAGE_BATTERY_LEAK);
                 } else {
                 	System.out.println("MOVING UP \n" + (++iWillDoTheCounting));
                 	// System.out.println(JavaCityMap.map[this.positionX][this.positionY]);
                     moveUp();
+                    this.battery.decreasing((double)MESSAGE_BATTERY_LEAK);
                 }
                 Thread.sleep(stepDuration);
             }
@@ -466,10 +469,12 @@ public abstract class Vehicle extends Thread implements Serializable {
                 	System.out.println("MOVING RIGHT \n" +(++iWillDoTheCounting));
                 	// System.out.println(JavaCityMap.map[this.positionX][this.positionY]);
                     moveRight();
+                    this.battery.decreasing((double)MESSAGE_BATTERY_LEAK);
                 } else {
                 	System.out.println("MOVING LEFT \n" + (++iWillDoTheCounting));
                 	// System.out.println(JavaCityMap.map[this.positionX][this.positionY]);
                     moveLeft();
+                    this.battery.decreasing((double)MESSAGE_BATTERY_LEAK);
                 }
                 Thread.sleep(stepDuration);
             }
