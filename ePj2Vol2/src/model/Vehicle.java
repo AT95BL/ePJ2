@@ -12,6 +12,7 @@ import battery.*;
 import utility.ConfigFileReader;
 import javacitymap.JavaCityMap;
 import malfunction.*;
+import monitor.*;
 import passenger.*;
 import rental.Rental;
 import bill.Bill;
@@ -498,12 +499,16 @@ public abstract class Vehicle extends Thread implements Serializable {
             double priceForThatType; 				// 	price for car/bike/scooter
             if(this.type.equals("automobil")) {
             	 priceForThatType = Double.parseDouble(configFileReader.getProperty("CAR_UNIT_PRICE"));
+            	 RentalSalesMonitor.carRentalIncrement();
+            	 
             }
             else if(this.type.equals("bicikl")) {
             	priceForThatType = Double.parseDouble(configFileReader.getProperty("BIKE_UNIT_PRICE"));
+            	RentalSalesMonitor.bikeRentalIncrement();
             }
             else {
             	priceForThatType = Double.parseDouble(configFileReader.getProperty("SCOOTER_UNIT_PRICE"));
+            	RentalSalesMonitor.scooterRentalIncrement();
             }
             
             double standardPrice = priceForThatType * /*this.duration*/ stepDuration;	
@@ -521,21 +526,23 @@ public abstract class Vehicle extends Thread implements Serializable {
             standardPrice *= priceForCityPart; 		 //	Iznos(osnovna cijena * udaljenost)
             
             double discountPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT"));
+            RentalSalaryMonitor.discountSalary += discountPrice;
             
             double discountPromotionPrice = 0;
             
             if(Rental.RENTAL_COUNTER % 10 == 0) {
             	discountPromotionPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT_PROM"));
+            	RentalSalaryMonitor.promotionSalary += discountPromotionPrice;
             }
             
             standardPrice = standardPrice - (standardPrice*discountPrice) - (standardPrice*discountPromotionPrice);
+            RentalSalaryMonitor.totalSalary += standardPrice;
             
             this.listOfPassengers.get(0).bill = new Bill(
             		standardPrice, 
             		this.type,
             		this.listOfPassengers.get(0),  
             		this.malfunction);
-            
             //---------------------------------------------------------------------------------------------------------------
             
         } catch (InterruptedException ex) {

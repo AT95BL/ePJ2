@@ -4,6 +4,7 @@ import javacitymap.*;
 import malfunction.Malfunction;
 import rental.*;
 import model.*;
+import monitor.*;
 import passenger.*;
 import data.*;
 import utility.*;
@@ -35,6 +36,10 @@ public class Proba {
 		
 		ConfigFileCreator configFileCreator = new ConfigFileCreator();
 		configFileCreator.createConfigFile();
+		
+		RentalSalesMonitor rentalSalesMonitor = new RentalSalesMonitor();
+		RentalSalaryMonitor rentalSalaryMonitor = new RentalSalaryMonitor();
+		RentalRepairmentCostsMonitor rentalRepairementCostsMonitor = new RentalRepairmentCostsMonitor();
 		
 		try {
 			listOfVehicles = vehicleDataLoader.loadVehicles("PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv");
@@ -80,6 +85,18 @@ public class Proba {
 		        if (vehicle.isMalfunction()) {
 		            System.out.println("Malfunctioned Vehicle!! \n");
 		            vehicle.setMalfunctionModel(new Malfunction(Malfunction.MALFUNCTION_MESSAGE, rental.getDate(), vehicle));
+		            if("automobil".equals(vehicle.type)) {
+		            	RentalRepairmentCostsMonitor.carRepairsTotal += 
+		            			RentalRepairmentCostsMonitor.CAR_REPAIR_COST * vehicle.getPurchasePrice();
+		            }
+		            else if("bicikl".equals(vehicle.type)) {
+		            	RentalRepairmentCostsMonitor.bikeRepairsTotal += 
+		            			RentalRepairmentCostsMonitor.BIKE_REPAIR_COST * vehicle.getPurchasePrice();
+		            }
+		            else {
+		            	RentalRepairmentCostsMonitor.scooterRepairsTotal += 
+		            			RentalRepairmentCostsMonitor.SCOOTER_REPAIR_COST * vehicle.getPurchasePrice();
+		            }
 		        }
 
 		        if (vehicle.getState() == Thread.State.NEW) {
@@ -119,6 +136,16 @@ public class Proba {
 		for(var passenger:listOfPassengers) {
 			System.out.println(passenger.bill + "\n");
 		}
+		
+		try {
+			Thread.sleep(2000);
+		}catch(InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		
+		System.out.println("\n Sales Monitor: " + rentalSalesMonitor);
+		System.out.println("\n Salary Monitor: " + rentalSalaryMonitor);
+		System.out.println("\n Repair Costs Monitor: " + rentalRepairementCostsMonitor);
 	}
 }
 
