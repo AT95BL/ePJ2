@@ -61,25 +61,25 @@ public class JavaCityMap {
 
 	
 	// to check if the object has reached maximum left limit of the map, call the following method:
-	public synchronized boolean checkLeftBoundaryMaxLimit(int positionY) {return positionY == NUMBER_OF_COLUMNS-1; }
+	public static synchronized boolean checkLeftBoundaryMaxLimit(int positionY) {return positionY == NUMBER_OF_COLUMNS-1; }
 	
 	// to check if the object has reached maximum right limit of the map, call the following method:
-	public synchronized boolean checkRightBoundaryMaxLimit(int positionY) {return positionY == 0;}
+	public static synchronized boolean checkRightBoundaryMaxLimit(int positionY) {return positionY == 0;}
 	
 	// to check if the object has reached maximum upper limit of the map, call the following method:
-	public synchronized boolean checkUpperBoundaryMaxLimit(int positionX) {return positionX == 0;}
+	public  static synchronized boolean checkUpperBoundaryMaxLimit(int positionX) {return positionX == 0;}
 	
 	// to check if object has reached the bottom of the map, call the following method:
-	public synchronized boolean checkLowerBoundaryMaxLimit(int positionX) {return positionX == NUMBER_OF_ROWS-1;}
+	public static synchronized boolean checkLowerBoundaryMaxLimit(int positionX) {return positionX == NUMBER_OF_ROWS-1;}
 	
 	// to check if the cell-indexes are valid, call the following method:
-	public synchronized boolean checkValidCell(int x, int y) {return x>=0 && x <=NUMBER_OF_ROWS-1 && y>=0 && y <= NUMBER_OF_COLUMNS-1; }
+	public static synchronized boolean checkValidCell(int x, int y) {return x>=0 && x <=NUMBER_OF_ROWS-1 && y>=0 && y <= NUMBER_OF_COLUMNS-1; }
 	
 	// to check if the cell-indexes are inside wider part of the JavaCity, call the following method:
-	public synchronized boolean checkWidePartOfTheJavaCity(int x, int y) { 
+	public  static synchronized boolean checkWidePartOfTheJavaCity(int x, int y) { 
 		return x >= WIDE_PART_OF_THE_CITY_LOWER_BOUND 
 				&& x <= WIDE_PART_OF_THE_CITY_UPPER_BOUND 
-				&& y >= WIDE_PART_OF_THE_CITY_LOWER_BOUND 
+				|| y >= WIDE_PART_OF_THE_CITY_LOWER_BOUND 
 				&& y<= WIDE_PART_OF_THE_CITY_UPPER_BOUND; }
 	
 	@Override

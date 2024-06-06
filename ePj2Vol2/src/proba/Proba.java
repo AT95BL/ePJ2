@@ -7,11 +7,13 @@ import model.*;
 import passenger.*;
 import data.*;
 import utility.*;
+import bill.Bill;
 
 import java.util.Map;
 import java.util.List;
 import java.util.Random;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -25,6 +27,7 @@ public class Proba {
 		
 		List<Vehicle> listOfVehicles = null;
 		List<Rental> listOfRentals = null;
+		List<Passenger> listOfPassengers = new ArrayList<>();
 		
 		JavaCityMap javaCityMap = new JavaCityMap();
 		
@@ -84,9 +87,11 @@ public class Proba {
 		        	  int temp = random.nextInt(100);
 		        	  if( temp % 2 == 0) {
 		        		  passenger = new Local(rental.getUserName(), "PASSENGER" + passengerCounter, "ADDRESS" + passengerCounter);
+		        		  listOfPassengers.add(passenger);
 		        	  }
 		        	  else {
 		        		  passenger = new Stranger(rental.getUserName(), "PASSENGER" + passengerCounter, "ADDRESS" + passengerCounter);
+		        		  listOfPassengers.add(passenger);
 		        	  }
 		        	  vehicle.addPassenger(passenger);
 		        	  JavaCityMap.updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle);
@@ -102,6 +107,17 @@ public class Proba {
 		            System.err.println(ex);
 		        }
 		    }
+		}
+		
+		try {
+			Thread.sleep(2000);
+		}catch(InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		
+		System.out.println("Bills: ");
+		for(var passenger:listOfPassengers) {
+			System.out.println(passenger.bill + "\n");
 		}
 	}
 }

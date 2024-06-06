@@ -6,6 +6,7 @@ import malfunction.Malfunction;
 import model.Vehicle;
 
 public class Rental {
+	public static long RENTAL_COUNTER = 1; // every 10th gets a discount
 	// Attributes according to the text of the given task
 	public Date date;				//	1	DATUM IZNAJMLJIVANJA
 	public String userName; 		//	2 	korisnikovo ime

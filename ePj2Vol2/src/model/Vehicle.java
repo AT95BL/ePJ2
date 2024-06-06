@@ -9,9 +9,12 @@ import java.io.Serializable;
 import java.util.concurrent.locks.ReentrantLock;
 
 import battery.*;
+import utility.ConfigFileReader;
 import javacitymap.JavaCityMap;
 import malfunction.*;
 import passenger.*;
+import rental.Rental;
+import bill.Bill;
 
 public abstract class Vehicle extends Thread implements Serializable {
     // system messages --NE OBRAĆAJ PAŽNJU!!
@@ -23,34 +26,36 @@ public abstract class Vehicle extends Thread implements Serializable {
     private static final int	MESSAGE_BATTERY_LEAK = 2;
 
     // class attributes according to the given-task
-    public String vehicleId;                // 1
-    public String manufacturer;                // 2 proizvodjac
-    public String model;                    // 3 model of car/bike/scooter
-    public Date purchaseDate;                // 4 datum nabavke
-    public double purchasePrice;            // 5 cijena nabavke
-    public double autonomyOrMaxSpeed;        // 6 domet sa jednim punjenjem -autonomija
-    public double maxSpeed;                    // 7
-    public String description;                // 8 opis
-    public String type;                        // 9 tekstualni opis tipa --> car/bike/scooter
-    public Battery battery;                    // baterija -status, kapacitet
-    public boolean malfunction = false;        // malfunction detector
+    public String vehicleId;               	   		 // 1
+    public String manufacturer;             		 // 2 proizvodjac
+    public String model;                    		 // 3 model of car/bike/scooter
+    public Date purchaseDate;                		 // 4 datum nabavke
+    public double purchasePrice;            		 // 5 cijena nabavke
+    public double autonomyOrMaxSpeed;        		 // 6 domet sa jednim punjenjem -autonomija
+    public double maxSpeed;                    		 // 7
+    public String description;                		 // 8 opis
+    public String type;                              // 9 tekstualni opis tipa --> car/bike/scooter
+    public Battery battery;                        // baterija -status, kapacitet
+    public boolean malfunction = false;   	       // malfunction detector
     public Malfunction malfunctionModel = null;    // malfunction model
 
-    long duration;                            // VRIJEME TRAJANJA KRETANJA A->B
+    long duration;                           	   // VRIJEME TRAJANJA KRETANJA A->B
 
     // vehicle map-coordinates/coordinating
     int positionX;                                        // row
     int positionY;                                        // column
-    int startPositionX;                                    // start row
-    int startPositionY;                                    // start column
-    int destinationPositionX;                            // final row
-    int destinationPositionY;                            // final column
+    int startPositionX;                                   // start row
+    int startPositionY;                                   // start column
+    int destinationPositionX;                             // final row
+    int destinationPositionY;                             // final column
 
     // passengers info
     public int numberOfPassengers;
     public List<Passenger> listOfPassengers = new ArrayList<>();
     
     private static final ReentrantLock classLock = new ReentrantLock();
+    
+    ConfigFileReader configFileReader = new ConfigFileReader(); // for bills ..
     
     // Default Constructor
     public Vehicle() {}
@@ -488,6 +493,51 @@ public abstract class Vehicle extends Thread implements Serializable {
                 }
                 Thread.sleep(stepDuration);
             }
+            
+            //---------------------------------------------------------------------------------------------------------------
+            double priceForThatType; 				// 	price for car/bike/scooter
+            if(this.type.equals("automobil")) {
+            	 priceForThatType = Double.parseDouble(configFileReader.getProperty("CAR_UNIT_PRICE"));
+            }
+            else if(this.type.equals("bicikl")) {
+            	priceForThatType = Double.parseDouble(configFileReader.getProperty("BIKE_UNIT_PRICE"));
+            }
+            else {
+            	priceForThatType = Double.parseDouble(configFileReader.getProperty("SCOOTER_UNIT_PRICE"));
+            }
+            
+            double standardPrice = priceForThatType * /*this.duration*/ stepDuration;	
+        
+            boolean widerPartOfTheCityCheck = JavaCityMap.checkWidePartOfTheJavaCity(this.positionX, this.positionY);
+            
+            double priceForCityPart;
+            
+            if(widerPartOfTheCityCheck) {
+            	priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_WIDE"));
+            }else {
+            	priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_NARROW"));
+            }
+            
+            standardPrice *= priceForCityPart; 		 //	Iznos(osnovna cijena * udaljenost)
+            
+            double discountPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT"));
+            
+            double discountPromotionPrice = 0;
+            
+            if(Rental.RENTAL_COUNTER % 10 == 0) {
+            	discountPromotionPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT_PROM"));
+            }
+            
+            standardPrice = standardPrice - (standardPrice*discountPrice) - (standardPrice*discountPromotionPrice);
+            
+            this.listOfPassengers.get(0).bill = new Bill(
+            		standardPrice, 
+            		this.type,
+            		this.listOfPassengers.get(0),  
+            		this.malfunction);
+            
+            //---------------------------------------------------------------------------------------------------------------
+            
         } catch (InterruptedException ex) {
             System.err.println(ex);
             Thread.currentThread().interrupt(); // Restore the interrupt status
