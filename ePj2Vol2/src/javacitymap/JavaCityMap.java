@@ -9,12 +9,10 @@ public class JavaCityMap {
     public static final int NUMBER_OF_COLUMNS = 20;
     public static final int WIDE_PART_OF_THE_CITY_LOWER_BOUND = 0;
     public static final int WIDE_PART_OF_THE_CITY_UPPER_BOUND = 10;
-
+    
     public static Object[][] map;
     public static ReentrantLock[][] cellLocks;  // Locks for each cell
     
-    
-
     // Constructor
     public JavaCityMap() {
         map = new Object[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];

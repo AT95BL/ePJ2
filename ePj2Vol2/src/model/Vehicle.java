@@ -332,7 +332,6 @@ public abstract class Vehicle extends Thread implements Serializable {
     }
 	*/
     
-    
     public void moveDown() {
         classLock.lock();
         try {
@@ -404,6 +403,7 @@ public abstract class Vehicle extends Thread implements Serializable {
             classLock.unlock();
         }
     }
+    
     
     // Overrides:
     @Override
