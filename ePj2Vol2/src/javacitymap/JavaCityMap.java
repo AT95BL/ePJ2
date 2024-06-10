@@ -1,6 +1,7 @@
 package javacitymap;
 
 import model.Vehicle;
+import gui.*;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,9 +13,10 @@ public class JavaCityMap {
     
     public static Object[][] map;
     public static ReentrantLock[][] cellLocks;  // Locks for each cell
+    public static MapPanel mapPanel;
     
     // Constructor
-    public JavaCityMap() {
+    public JavaCityMap(MapPanel mapPanel) {
         map = new Object[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
         cellLocks = new ReentrantLock[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
@@ -22,6 +24,7 @@ public class JavaCityMap {
                 cellLocks[i][j] = new ReentrantLock();
             }
         }
+        JavaCityMap.mapPanel = mapPanel;
     }
 
     // to check if the map-cell is clear(free) call the following method:
@@ -41,6 +44,7 @@ public class JavaCityMap {
         cellLocks[x][y].lock();
         try {
             map[x][y] = null;
+            mapPanel.updateMap();
         } finally {
             cellLocks[x][y].unlock();
         }
@@ -52,6 +56,7 @@ public class JavaCityMap {
         cellLocks[x][y].lock();
         try {
             map[x][y] = vehicle;
+            mapPanel.updateMap();
         } finally {
             cellLocks[x][y].unlock();
         }

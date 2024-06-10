@@ -5,9 +5,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import javacitymap.JavaCityMap;
-import model.Car;
-import model.Bike;
-import model.Scooter;
 import model.Vehicle;
 import rental.Rental;
 import data.RentalDataLoader;
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainWindow extends JFrame {
-
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextArea textArea;
@@ -52,13 +48,9 @@ public class MainWindow extends JFrame {
     private RentalSalaryMonitor rentalSalaryMonitor = new RentalSalaryMonitor();
     private RentalRepairmentCostsMonitor rentalRepairementCostsMonitor = new RentalRepairmentCostsMonitor();
 
-    // Panel za mapu
-    private JPanel mapPanel;
-    private JLabel[][] mapLabels;
+    private MapPanel mapPanel;
 
-    /**
-     * Launch the application.
-     */
+    // Launch the application.
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -72,19 +64,23 @@ public class MainWindow extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     */
+    // Create the frame.
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1200, 800); // Povećano za prikaz mape
+        setBounds(100, 100, 1200, 800);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
 
+        mapPanel = new MapPanel();
+        JScrollPane mapScrollPane = new JScrollPane(mapPanel);
+        contentPane.add(mapScrollPane, BorderLayout.CENTER);
+
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(300, 800));
+        contentPane.add(scrollPane, BorderLayout.EAST);
 
         btnStartSimulation = new JButton("Start Simulation");
         btnStartSimulation.addActionListener(new ActionListener() {
@@ -92,6 +88,8 @@ public class MainWindow extends JFrame {
                 new Thread(() -> startSimulation()).start();
             }
         });
+
+        contentPane.add(btnStartSimulation, BorderLayout.SOUTH);
 
         // Paneli za monitore
         salesMonitorPanel = new JPanel();
@@ -119,51 +117,26 @@ public class MainWindow extends JFrame {
         repairCostsMonitorPanel.add(new JScrollPane(repairCostsMonitorTextArea), BorderLayout.CENTER);
 
         JPanel monitorsPanel = new JPanel();
-        monitorsPanel.setLayout(new GridLayout(1, 3));
+        monitorsPanel.setLayout(new GridLayout(3, 1));
         monitorsPanel.add(salesMonitorPanel);
         monitorsPanel.add(salaryMonitorPanel);
         monitorsPanel.add(repairCostsMonitorPanel);
-
-        // Panel za mapu
-        mapPanel = new JPanel();
-        mapPanel.setLayout(new GridLayout(JavaCityMap.NUMBER_OF_ROWS, JavaCityMap.NUMBER_OF_COLUMNS));
-        mapLabels = new JLabel[JavaCityMap.NUMBER_OF_ROWS][JavaCityMap.NUMBER_OF_COLUMNS];
-        for (int i = 0; i < JavaCityMap.NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < JavaCityMap.NUMBER_OF_COLUMNS; j++) {
-                JLabel cell = new JLabel();
-                cell.setOpaque(true);
-                if (i < 10 && j < 10) {
-                    cell.setBackground(Color.BLUE); // Boja za prvih 10x10 ćelija
-                } else {
-                    cell.setBackground(Color.GRAY); // Boja za ostale ćelije
-                }
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                mapLabels[i][j] = cell;
-                mapPanel.add(cell);
-            }
-        }
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, mapPanel);
-        splitPane.setResizeWeight(0.5); // Početna raspodela prostora 50% za oba panela
-
-        JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, monitorsPanel, splitPane);
-        mainSplitPane.setResizeWeight(0.2); // Početna raspodela prostora
-
-        contentPane.add(mainSplitPane, BorderLayout.CENTER);
-        contentPane.add(btnStartSimulation, BorderLayout.SOUTH);
+        monitorsPanel.setPreferredSize(new Dimension(300, 400));
+        
+        contentPane.add(monitorsPanel, BorderLayout.WEST);
 
         setContentPane(contentPane);
+
+        JavaCityMap javaCityMap = new JavaCityMap(mapPanel); // Initialize the map with the panel
     }
 
-    private void startSimulation() { 	
+    private void startSimulation() {
         VehicleDataLoader vehicleDataLoader = new VehicleDataLoader();
         RentalDataLoader rentalDataLoader = new RentalDataLoader();
 
         List<Vehicle> listOfVehicles = null;
         List<Rental> listOfRentals = null;
         List<Passenger> listOfPassengers = new ArrayList<>();
-
-        JavaCityMap javaCityMap = new JavaCityMap();
 
         Random random = new Random();
 
@@ -235,7 +208,7 @@ public class MainWindow extends JFrame {
                         listOfPassengers.add(passenger);
                     }
                     vehicle.addPassenger(passenger);
-                    updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle); // Ažuriraj boju ćelije na osnovu tipa vozila
+                    JavaCityMap.updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle);
                     appendToTextArea(vehicle.toString());
                     vehicle.start();
                 } else {
@@ -280,21 +253,5 @@ public class MainWindow extends JFrame {
             salaryMonitorTextArea.setText("Salary Monitor: " + rentalSalaryMonitor);
             repairCostsMonitorTextArea.setText("Repair Costs Monitor: " + rentalRepairementCostsMonitor);
         });
-    }
-
-    private void updateCell(int x, int y, Vehicle vehicle) {
-        if (x >= 0 && x < JavaCityMap.NUMBER_OF_ROWS && y >= 0 && y < JavaCityMap.NUMBER_OF_COLUMNS) {
-            Color color;
-            if (vehicle instanceof Car) {
-                color = Color.RED;
-            } else if (vehicle instanceof Bike) {
-                color = Color.YELLOW;
-            } else if (vehicle instanceof Scooter) {
-                color = Color.GREEN;
-            } else {
-                color = Color.GRAY;
-            }
-            mapLabels[x][y].setBackground(color);
-        }
     }
 }
