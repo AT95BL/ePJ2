@@ -14,9 +14,39 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 
+/**
+ * @author AT95
+ * @version 1
+ * The {@code RentalDataLoader} class is responsible for loading rental data from a CSV file.
+ * It parses the file, validates the records, and returns a sorted list of {@code Rental} objects.
+ * The class ensures that each rental record has a unique date and vehicle ID combination.
+ * 
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * RentalDataLoader rentalDataLoader = new RentalDataLoader();
+ * List<Rental> rentals = rentalDataLoader.loadRentals("rentals.csv");
+ * for (Rental rental : rentals) {
+ *     System.out.println(rental);
+ * }
+ * }
+ * </pre>
+ * </p>
+ * 
+ * @see Rental
+ */
 public class RentalDataLoader {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d.M.yyyy HH:mm");
-
+    
+    /**
+     * Loads rental data from the specified CSV file.
+     * 
+     * @param filePath the path to the CSV file containing rental data
+     * @return a list of {@code Rental} objects sorted by date
+     * @throws IOException if an I/O error occurs reading from the file
+     * @throws ParseException if a date in the file cannot be parsed
+     */
     public List<Rental> loadRentals(String filePath) throws IOException, ParseException {
         List<Rental> rentals = new ArrayList<>();
         HashSet<Date> uniqueDates = new HashSet<>();		 // Set za praćenje jedinstvenih datuma
@@ -78,5 +108,4 @@ public class RentalDataLoader {
     	}
     }
     */
-    
 }

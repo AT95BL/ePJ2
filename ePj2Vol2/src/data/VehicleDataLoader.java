@@ -11,9 +11,42 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author AT95
+ * @version 1
+ * The {@code VehicleDataLoader} class is responsible for loading vehicle data from a CSV file.
+ * It parses the file and creates a list of {@code Vehicle} objects, which can be of type {@code Car},
+ * {@code Bike}, or {@code Scooter}, based on the type specified in the file.
+ * 
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * VehicleDataLoader loader = new VehicleDataLoader();
+ * List<Vehicle> vehicles = loader.loadVehicles("vehicles.csv");
+ * for (Vehicle vehicle : vehicles) {
+ *     System.out.println(vehicle);
+ * }
+ * }
+ * </pre>
+ * </p>
+ * 
+ * @see Vehicle
+ * @see Car
+ * @see Bike
+ * @see Scooter
+ */
 public class VehicleDataLoader {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy.");
 	
+	/**
+     * Loads vehicle data from the specified CSV file.
+     * 
+     * @param filePath the path to the CSV file containing vehicle data
+     * @return a list of {@code Vehicle} objects
+     * @throws IOException if an I/O error occurs reading from the file
+     * @throws ParseException if a date in the file cannot be parsed
+     */
 	public List<Vehicle> loadVehicles(String filePath)throws IOException, ParseException{
 		List<Vehicle> vehicles = new ArrayList<>();
 		

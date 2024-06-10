@@ -17,6 +17,16 @@ import passenger.*;
 import rental.Rental;
 import bill.Bill;
 
+/**
+ * @author AT95
+ * @version 1
+ * The {@code Vehicle} class represents an abstract vehicle with various attributes
+ * and methods to manage its state and behavior.
+ * <p>
+ * This class extends {@code Thread} and implements {@code Serializable}, allowing
+ * vehicles to run as separate threads and be serialized.
+ * </p>
+ */
 public abstract class Vehicle extends Thread implements Serializable {
     // system messages --NE OBRAĆAJ PAŽNJU!!
     private static final String MESSAGE_LEFT = "Cannot move left. Position is out of bounds.";
@@ -58,10 +68,24 @@ public abstract class Vehicle extends Thread implements Serializable {
     
     ConfigFileReader configFileReader = new ConfigFileReader(); // for bills ..
     
-    // Default Constructor
+    /**
+     * Default constructor for the {@code Vehicle} class.
+     */
     public Vehicle() {}
 
-    // Constructor
+    /**
+     * Parameterized constructor for the {@code Vehicle} class.
+     *
+     * @param vehicleId           the ID of the vehicle
+     * @param manufacturer        the manufacturer of the vehicle
+     * @param model               the model of the vehicle
+     * @param purchaseDate        the purchase date of the vehicle
+     * @param purchasePrice       the purchase price of the vehicle
+     * @param autonomyOrMaxSpeed  the autonomy or max speed of the vehicle
+     * @param maxSpeed            the maximum speed of the vehicle
+     * @param description         the description of the vehicle
+     * @param type                the type of the vehicle (car, bike, scooter)
+     */
     public Vehicle(
             String vehicleId,
             String manufacturer,
@@ -277,6 +301,9 @@ public abstract class Vehicle extends Thread implements Serializable {
         this.duration = duration;
     }
     
+    /**
+     * Moves the vehicle downwards on the map.
+     */
     public void moveDown() {
         classLock.lock();
         try {
@@ -294,7 +321,10 @@ public abstract class Vehicle extends Thread implements Serializable {
             classLock.unlock();
         }
     }
-
+    
+    /**
+     * Moves the vehicle upwards on the map.
+     */
     public void moveUp() {
         classLock.lock();
         try {
@@ -312,7 +342,10 @@ public abstract class Vehicle extends Thread implements Serializable {
             classLock.unlock();
         }
     }
-
+    
+    /**
+     * Moves the vehicle left on the map.
+     */
     public void moveLeft() {
         classLock.lock();
         try {
@@ -330,7 +363,10 @@ public abstract class Vehicle extends Thread implements Serializable {
             classLock.unlock();
         }
     }
-
+    
+    /**
+     * Moves the vehicle right on the map.
+     */
     public void moveRight() {
         classLock.lock();
         try {
@@ -351,6 +387,13 @@ public abstract class Vehicle extends Thread implements Serializable {
     
     
     // Overrides:
+    
+    /**
+     * Overrides the default {@code toString} method to provide a string representation
+     * of the vehicle object.
+     *
+     * @return a string representation of the vehicle object
+     */
     @Override
     public String toString() {
     	
@@ -380,6 +423,10 @@ public abstract class Vehicle extends Thread implements Serializable {
     }
 
     @Override
+    /**
+     * Overrides the default {@code run} method to define the behavior of the vehicle
+     * when it is running as a thread.
+     */
     public void run() {
         // Check if the destination is the same as the current position
         if (this.positionX == this.destinationPositionX && this.positionY == this.destinationPositionY) {
