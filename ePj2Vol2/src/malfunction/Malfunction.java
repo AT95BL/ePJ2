@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @author AT95
  * @version 1
  * The {@code Malfunction} class represents a malfunction event that occurs in a vehicle.
+ * This class implements {@code Serializable}.
  * It includes details about the malfunction description, the date it happened, and the
  * vehicle that is broken.
  * 

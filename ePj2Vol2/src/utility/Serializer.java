@@ -4,29 +4,43 @@ import java.io.*;
 import java.util.List;
 import model.Vehicle;
 
+/**
+ * @author AT95
+ * @version 1
+ * The Serializer class provides functionality to serialize a list of Vehicle objects
+ * to a file. The serialized file is stored in a specified folder with a specified name.
+ */
 public class Serializer {
+	/** The name of the folder where the serialized file will be stored. */
 	public static String FOLDER_NAME = "Reports";
+	
+	/** The name of the file where the list of Vehicle objects will be serialized. */
 	public static String FILE_NAME = "MostLossMakingVehicles.ser";
 	
+	/**
+     * Serializes a list of Vehicle objects to a file.
+     *
+     * @param vehicleList the list of Vehicle objects to be serialized
+     */
     public static void serializeVehicleList(List<Vehicle> vehicleList) {
         try {
-            // Stvaranje foldera ako ne postoji
+        	// Create the folder if it does not exist
             File folder = new File(FOLDER_NAME);
             if (!folder.exists()) {
                 folder.mkdirs();
             }
 
-            // Stvaranje putanje do datoteke
+            // Create the file path
             String filePath = FOLDER_NAME + File.separator + FILE_NAME;
 
-            // Otvaranje izlaznog toka prema datoteci
+            // Open an output stream to the file
             FileOutputStream fileOut = new FileOutputStream(filePath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
-            // Serijalizacija liste vozila
+            // Serialize the list of vehicles
             out.writeObject(vehicleList);
 
-            // Zatvaranje toka
+            // Close the streams
             out.close();
             fileOut.close();
 

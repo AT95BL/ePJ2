@@ -9,6 +9,7 @@ import java.util.Properties;
  * @author AT95
  * @version 1
  * Utility class for reading configuration properties from a file.
+ * This implements {@code Serializable}
  */
 public class ConfigFileReader implements Serializable{
     private Properties properties;

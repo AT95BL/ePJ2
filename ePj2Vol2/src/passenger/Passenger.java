@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @author AT95
  * @verison 1
  * The {@code Passenger} class represents a generic passenger in the transportation system.
+ * This class implements {@code Serializable}.
  * It is an abstract class providing basic attributes and methods for passengers.
  */
 public abstract class Passenger implements Serializable{

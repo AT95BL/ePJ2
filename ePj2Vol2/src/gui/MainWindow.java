@@ -30,6 +30,13 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author AT95
+ * @version 1
+ * The MainWindow class represents the main window of the application.
+ * It includes a map panel, text areas for displaying information, and buttons to start the simulation.
+ * The class also handles the initialization and update of the simulation and its related components.
+ */
 public class MainWindow extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -37,7 +44,7 @@ public class MainWindow extends JFrame {
     private JButton btnStartSimulation;
     private static int passengerCounter = 1;
 
-    // Paneli za monitore
+    // Panels for monitors
     private JPanel salesMonitorPanel;
     private JPanel salaryMonitorPanel;
     private JPanel repairCostsMonitorPanel;
@@ -52,7 +59,11 @@ public class MainWindow extends JFrame {
 
     private MapPanel mapPanel;
 
-    // Launch the application.
+    /**
+     * Launches the application.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -66,7 +77,9 @@ public class MainWindow extends JFrame {
         });
     }
 
-    // Create the frame.
+    /**
+     * Creates the frame and initializes its components.
+     */
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1200, 800);
@@ -93,7 +106,7 @@ public class MainWindow extends JFrame {
 
         contentPane.add(btnStartSimulation, BorderLayout.SOUTH);
 
-        // Paneli za monitore
+        // Panels for monitors
         salesMonitorPanel = new JPanel();
         salaryMonitorPanel = new JPanel();
         repairCostsMonitorPanel = new JPanel();
@@ -131,7 +144,10 @@ public class MainWindow extends JFrame {
 
         JavaCityMap javaCityMap = new JavaCityMap(mapPanel); // Initialize the map with the panel
     }
-
+    
+    /**
+     * Starts the simulation by loading vehicle and rental data, initializing vehicles, and updating the map.
+     */
     private void startSimulation() {
         VehicleDataLoader vehicleDataLoader = new VehicleDataLoader();
         RentalDataLoader rentalDataLoader = new RentalDataLoader();
@@ -247,11 +263,19 @@ public class MainWindow extends JFrame {
 
         updateMonitorPanels();
     }
-
+    
+    /**
+     * Appends the specified text to the main text area.
+     *
+     * @param text The text to be appended.
+     */
     private void appendToTextArea(String text) {
         EventQueue.invokeLater(() -> textArea.append(text + "\n"));
     }
-
+    
+    /**
+     * Updates the monitor panels with the latest data.
+     */
     private void updateMonitorPanels() {
         EventQueue.invokeLater(() -> {
             salesMonitorTextArea.setText("Sales Monitor: " + rentalSalesMonitor);
