@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 public class Proba {
-	
+	/*
 	private static int passengerCounter=1;
 	
 	public static void main(String[] args) {
@@ -147,5 +147,6 @@ public class Proba {
 		System.out.println("\n Salary Monitor: " + rentalSalaryMonitor);
 		System.out.println("\n Repair Costs Monitor: " + rentalRepairementCostsMonitor);
 	}
+	*/
 }
 

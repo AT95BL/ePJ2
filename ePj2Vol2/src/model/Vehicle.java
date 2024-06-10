@@ -277,61 +277,6 @@ public abstract class Vehicle extends Thread implements Serializable {
         this.duration = duration;
     }
     
-    /*
-    public synchronized void moveDown() {
-            if (this.positionX == JavaCityMap.NUMBER_OF_ROWS - 1) { // check if the vehicle is already on the far left
-                throw new IndexOutOfBoundsException(MESSAGE_DOWN);
-            }
-            if (JavaCityMap.isCellClear(this.positionX + 1, this.positionY)) { // synchronized?
-                JavaCityMap.clearCell(this.positionX, this.positionY);
-                this.positionX++;
-                JavaCityMap.updateCell(this.positionX, this.positionY, this); // move the vehicle
-            } else {
-                System.err.println("Cannot move down, cell is not clear.");
-            }
-    }
-
-    public synchronized void moveUp() {
-            if (this.positionX == 0) {
-                throw new IndexOutOfBoundsException(MESSAGE_UP);
-            }
-            if (JavaCityMap.isCellClear(this.positionX - 1, this.positionY)) {
-                JavaCityMap.clearCell(this.positionX, this.positionY);
-                this.positionX--;
-                JavaCityMap.updateCell(this.positionX, this.positionY, this);
-            } else {
-                System.err.println("Cannot move up, cell is not clear.");
-            }
-    }
-
-    public synchronized void moveLeft() {
-            if (this.positionY == 0) {
-                throw new IndexOutOfBoundsException(MESSAGE_LEFT);
-            }
-            if (JavaCityMap.isCellClear(this.positionX, this.positionY - 1)) {
-                JavaCityMap.clearCell(this.positionX, this.positionY);
-                this.positionY--;
-                JavaCityMap.updateCell(this.positionX, this.positionY, this);
-            } else {
-                System.err.println("Cannot move left, cell is not clear.");
-            }
-    }
-
-    public synchronized void moveRight() {
-
-            if (this.positionY == JavaCityMap.NUMBER_OF_COLUMNS - 1) {
-                throw new IndexOutOfBoundsException(MESSAGE_RIGHT);
-            }
-            if (JavaCityMap.isCellClear(this.positionX, this.positionY + 1)) {
-                JavaCityMap.clearCell(this.positionX, this.positionY);
-                this.positionY++;
-                JavaCityMap.updateCell(this.positionX, this.positionY, this);
-            } else {
-                System.err.println("Cannot move right, cell is not clear.");
-            }        
-    }
-	*/
-    
     public void moveDown() {
         classLock.lock();
         try {

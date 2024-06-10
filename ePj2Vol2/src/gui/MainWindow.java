@@ -5,6 +5,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import javacitymap.JavaCityMap;
+import model.Car;
+import model.Bike;
+import model.Scooter;
 import model.Vehicle;
 import rental.Rental;
 import data.RentalDataLoader;
@@ -23,7 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.List; // Ovde je eksplicitno navedeno da koristimo java.util.List
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Random;
@@ -49,6 +52,10 @@ public class MainWindow extends JFrame {
     private RentalSalaryMonitor rentalSalaryMonitor = new RentalSalaryMonitor();
     private RentalRepairmentCostsMonitor rentalRepairementCostsMonitor = new RentalRepairmentCostsMonitor();
 
+    // Panel za mapu
+    private JPanel mapPanel;
+    private JLabel[][] mapLabels;
+
     /**
      * Launch the application.
      */
@@ -70,7 +77,7 @@ public class MainWindow extends JFrame {
      */
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 900, 600);
+        setBounds(100, 100, 1200, 800); // Povećano za prikaz mape
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
@@ -78,7 +85,6 @@ public class MainWindow extends JFrame {
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        contentPane.add(scrollPane, BorderLayout.CENTER);
 
         btnStartSimulation = new JButton("Start Simulation");
         btnStartSimulation.addActionListener(new ActionListener() {
@@ -86,8 +92,6 @@ public class MainWindow extends JFrame {
                 new Thread(() -> startSimulation()).start();
             }
         });
-
-        contentPane.add(btnStartSimulation, BorderLayout.SOUTH);
 
         // Paneli za monitore
         salesMonitorPanel = new JPanel();
@@ -120,12 +124,38 @@ public class MainWindow extends JFrame {
         monitorsPanel.add(salaryMonitorPanel);
         monitorsPanel.add(repairCostsMonitorPanel);
 
-        contentPane.add(monitorsPanel, BorderLayout.NORTH);
+        // Panel za mapu
+        mapPanel = new JPanel();
+        mapPanel.setLayout(new GridLayout(JavaCityMap.NUMBER_OF_ROWS, JavaCityMap.NUMBER_OF_COLUMNS));
+        mapLabels = new JLabel[JavaCityMap.NUMBER_OF_ROWS][JavaCityMap.NUMBER_OF_COLUMNS];
+        for (int i = 0; i < JavaCityMap.NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < JavaCityMap.NUMBER_OF_COLUMNS; j++) {
+                JLabel cell = new JLabel();
+                cell.setOpaque(true);
+                if (i < 10 && j < 10) {
+                    cell.setBackground(Color.BLUE); // Boja za prvih 10x10 ćelija
+                } else {
+                    cell.setBackground(Color.GRAY); // Boja za ostale ćelije
+                }
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                mapLabels[i][j] = cell;
+                mapPanel.add(cell);
+            }
+        }
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, mapPanel);
+        splitPane.setResizeWeight(0.5); // Početna raspodela prostora 50% za oba panela
+
+        JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, monitorsPanel, splitPane);
+        mainSplitPane.setResizeWeight(0.2); // Početna raspodela prostora
+
+        contentPane.add(mainSplitPane, BorderLayout.CENTER);
+        contentPane.add(btnStartSimulation, BorderLayout.SOUTH);
 
         setContentPane(contentPane);
     }
 
-    private void startSimulation() {
+    private void startSimulation() { 	
         VehicleDataLoader vehicleDataLoader = new VehicleDataLoader();
         RentalDataLoader rentalDataLoader = new RentalDataLoader();
 
@@ -205,7 +235,7 @@ public class MainWindow extends JFrame {
                         listOfPassengers.add(passenger);
                     }
                     vehicle.addPassenger(passenger);
-                    JavaCityMap.updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle);
+                    updateCell(vehicle.getPositionX(), vehicle.getPositionY(), vehicle); // Ažuriraj boju ćelije na osnovu tipa vozila
                     appendToTextArea(vehicle.toString());
                     vehicle.start();
                 } else {
@@ -250,5 +280,21 @@ public class MainWindow extends JFrame {
             salaryMonitorTextArea.setText("Salary Monitor: " + rentalSalaryMonitor);
             repairCostsMonitorTextArea.setText("Repair Costs Monitor: " + rentalRepairementCostsMonitor);
         });
+    }
+
+    private void updateCell(int x, int y, Vehicle vehicle) {
+        if (x >= 0 && x < JavaCityMap.NUMBER_OF_ROWS && y >= 0 && y < JavaCityMap.NUMBER_OF_COLUMNS) {
+            Color color;
+            if (vehicle instanceof Car) {
+                color = Color.RED;
+            } else if (vehicle instanceof Bike) {
+                color = Color.YELLOW;
+            } else if (vehicle instanceof Scooter) {
+                color = Color.GREEN;
+            } else {
+                color = Color.GRAY;
+            }
+            mapLabels[x][y].setBackground(color);
+        }
     }
 }

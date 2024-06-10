@@ -96,4 +96,3 @@ public class JavaCityMap {
         return sb.toString();
     }
 }
-
