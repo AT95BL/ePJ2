@@ -4,6 +4,8 @@ import java.util.Date;
 
 import model.Vehicle;
 
+import java.io.Serializable;
+
 /**
  * @author AT95
  * @version 1
@@ -24,7 +26,7 @@ import model.Vehicle;
  * 
  * @see Vehicle
  */
-public class Malfunction {
+public class Malfunction implements Serializable{
 	public static final String MALFUNCTION_MESSAGE = "MALFUNCTION OCCURED!!";
 	
 	public String malfunctionDescription;	//	opis kvara

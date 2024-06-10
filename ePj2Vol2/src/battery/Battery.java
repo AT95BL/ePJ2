@@ -1,5 +1,7 @@
 package battery;
 
+import java.io.Serializable;
+
 /**
  * @author AT95
  * @version 1
@@ -23,7 +25,7 @@ package battery;
  * 
  * @see BatteryException
  */
-public class Battery {
+public class Battery implements Serializable{
 	private static final String MAXIMUM_CAPACITY_MESSAGE = "Battery capacity: " + "\n" + 
             "100 for Scooters" + "\n" +
             "200 for Bikes" + "\n" +

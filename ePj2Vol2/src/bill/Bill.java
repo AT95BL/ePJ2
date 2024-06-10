@@ -2,6 +2,8 @@ package bill;
 
 import passenger.Passenger;
 
+import java.io.Serializable;
+
 /**
  * The {@code Bill} class represents a bill for a passenger's trip, including the total cost, 
  * vehicle type, passenger information, and whether there was a malfunction during the trip.
@@ -18,7 +20,7 @@ import passenger.Passenger;
  * </pre>
  * </p>
  */
-public class Bill {
+public class Bill implements Serializable{
     private double total;
     private String vehicleType;
     private Passenger passenger;

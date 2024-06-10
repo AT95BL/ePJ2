@@ -1,8 +1,5 @@
 package monitor;
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class RentalSalaryMonitor {
     public static double totalSalary;
     public static double discountSalary;

@@ -2,6 +2,7 @@ package utility;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Properties;
  * @version 1
  * Utility class for reading configuration properties from a file.
  */
-public class ConfigFileReader {
+public class ConfigFileReader implements Serializable{
     private Properties properties;
     
     /**

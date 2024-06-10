@@ -10,6 +10,8 @@ import rental.Rental;
 import data.RentalDataLoader;
 import data.VehicleDataLoader;
 import utility.ConfigFileCreator;
+import utility.Serializer;
+import utility.Deserializer;
 import monitor.RentalSalesMonitor;
 import monitor.RentalSalaryMonitor;
 import monitor.RentalRepairmentCostsMonitor;
@@ -188,12 +190,15 @@ public class MainWindow extends JFrame {
                     if ("automobil".equals(vehicle.type)) {
                         RentalRepairmentCostsMonitor.carRepairsTotal += 
                                 RentalRepairmentCostsMonitor.CAR_REPAIR_COST * vehicle.getPurchasePrice();
+                                RentalRepairmentCostsMonitor.cars.add(vehicle); // u skladu sa brojem indeksa
                     } else if ("bicikl".equals(vehicle.type)) {
                         RentalRepairmentCostsMonitor.bikeRepairsTotal += 
                                 RentalRepairmentCostsMonitor.BIKE_REPAIR_COST * vehicle.getPurchasePrice();
+                        		RentalRepairmentCostsMonitor.bikes.add(vehicle); // u skladu sa brojem indeksa 
                     } else {
                         RentalRepairmentCostsMonitor.scooterRepairsTotal += 
                                 RentalRepairmentCostsMonitor.SCOOTER_REPAIR_COST * vehicle.getPurchasePrice();
+                        		RentalRepairmentCostsMonitor.scooters.add(vehicle); // u skladu sa brojem indeksa
                     }
                 }
 
@@ -252,6 +257,16 @@ public class MainWindow extends JFrame {
             salesMonitorTextArea.setText("Sales Monitor: " + rentalSalesMonitor);
             salaryMonitorTextArea.setText("Salary Monitor: " + rentalSalaryMonitor);
             repairCostsMonitorTextArea.setText("Repair Costs Monitor: " + rentalRepairementCostsMonitor);
+
+            List<Vehicle> listOfMostLossMakingVehicleType = RentalRepairmentCostsMonitor.getmostLossMakingVehicleType();
+            Serializer.serializeVehicleList(listOfMostLossMakingVehicleType);
+
+            // Deserijalizacija liste vozila
+            listOfMostLossMakingVehicleType = Deserializer.deserializeVehicleList();
+
+            // Prikaz novog prozora sa deserijalizovanim podacima
+            LossMakingVehiclesWindow lossMakingVehiclesWindow = new LossMakingVehiclesWindow(listOfMostLossMakingVehicleType);
+            lossMakingVehiclesWindow.setVisible(true);
         });
     }
 }

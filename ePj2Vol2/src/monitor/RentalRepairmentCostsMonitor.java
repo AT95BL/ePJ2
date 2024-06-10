@@ -1,5 +1,10 @@
 package monitor;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import model.*;
+
 /**
  * Monitor class for tracking rental repairment costs for different types of vehicles.
  */
@@ -21,6 +26,10 @@ public class RentalRepairmentCostsMonitor {
     
     /** Total repair costs for scooters. */
     public static double scooterRepairsTotal;
+    
+    public static List<Vehicle> cars = new ArrayList<>();
+    public static List<Vehicle> bikes = new ArrayList<>();
+    public static List<Vehicle> scooters = new ArrayList<>();
     
     /**
      * Retrieves the total repair costs for cars.
@@ -87,6 +96,17 @@ public class RentalRepairmentCostsMonitor {
                 "Car Repairs Total: $" + String.format("%.2f", carRepairsTotal) + "\n" +
                 "Bike Repairs Total: $" + String.format("%.2f", bikeRepairsTotal) + "\n" +
                 "Scooter Repairs Total: $" + String.format("%.2f", scooterRepairsTotal);
+    }
+    
+    // u skladu sa brojem indeksa ..
+    public static List<Vehicle> getmostLossMakingVehicleType(){
+    	if(getCarRepairsTotal() > getBikeRepairsTotal() 
+    			&& getCarRepairsTotal() > getScooterRepairsTotal())
+    		return cars;
+    	else if(getBikeRepairsTotal() > getCarRepairsTotal() 
+    			&& getBikeRepairsTotal() > getScooterRepairsTotal() )
+    		return bikes;
+    	return scooters;
     }
 }
 
