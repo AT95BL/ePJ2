@@ -441,47 +441,52 @@ public abstract class Vehicle extends Thread implements Serializable {
             }
             
             //---------------------------------------------------------------------------------------------------------------
-            double priceForThatType; 				// 	price for car/bike/scooter
+            double priceForThatType; // price for car/bike/scooter
             if(this.type.equals("automobil")) {
-            	 priceForThatType = Double.parseDouble(configFileReader.getProperty("CAR_UNIT_PRICE"));
-            	 RentalSalesMonitor.carRentalIncrement();
-            	 
+                priceForThatType = Double.parseDouble(configFileReader.getProperty("CAR_UNIT_PRICE"));
+                RentalSalesMonitor.carRentalIncrement();
             }
             else if(this.type.equals("bicikl")) {
-            	priceForThatType = Double.parseDouble(configFileReader.getProperty("BIKE_UNIT_PRICE"));
-            	RentalSalesMonitor.bikeRentalIncrement();
+                priceForThatType = Double.parseDouble(configFileReader.getProperty("BIKE_UNIT_PRICE"));
+                RentalSalesMonitor.bikeRentalIncrement();
             }
             else {
-            	priceForThatType = Double.parseDouble(configFileReader.getProperty("SCOOTER_UNIT_PRICE"));
-            	RentalSalesMonitor.scooterRentalIncrement();
+                priceForThatType = Double.parseDouble(configFileReader.getProperty("SCOOTER_UNIT_PRICE"));
+                RentalSalesMonitor.scooterRentalIncrement();
             }
-            
-            double standardPrice = priceForThatType * /*this.duration*/ stepDuration;	
-        
+
+            double standardPrice = priceForThatType * stepDuration;
+
             boolean widerPartOfTheCityCheck = JavaCityMap.checkWidePartOfTheJavaCity(this.positionX, this.positionY);
-            
             double priceForCityPart;
-            
+
             if(widerPartOfTheCityCheck) {
-            	priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_WIDE"));
-            }else {
-            	priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_NARROW"));
+                priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_WIDE"));
+            } else {
+                priceForCityPart = Double.parseDouble(configFileReader.getProperty("DISTANCE_NARROW"));
             }
-            
-            standardPrice *= priceForCityPart; 		 //	Iznos(osnovna cijena * udaljenost)
-            
-            double discountPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT"));
-            RentalSalaryMonitor.discountSalary += discountPrice;
-            
+
+            standardPrice *= priceForCityPart; // Iznos (osnovna cijena * udaljenost)
+
+            double discountPrice = 0;
             double discountPromotionPrice = 0;
-            
-            if(Rental.RENTAL_COUNTER % 10 == 0) {
-            	discountPromotionPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT_PROM"));
-            	RentalSalaryMonitor.promotionSalary += discountPromotionPrice;
+
+            if (this.type.equals("automobil") && this.isMalfunction()) {
+                standardPrice = 0;
+            } else {
+                discountPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT"));
+                RentalSalaryMonitor.discountSalary += standardPrice * discountPrice;
+
+                if(Rental.RENTAL_COUNTER % 10 == 0) {
+                    discountPromotionPrice = Double.parseDouble(configFileReader.getProperty("DISCOUNT_PROM"));
+                    RentalSalaryMonitor.promotionSalary += standardPrice * discountPromotionPrice;
+                }
+
+                standardPrice = standardPrice - (standardPrice * discountPrice) - (standardPrice * discountPromotionPrice);
             }
-            
-            standardPrice = standardPrice - (standardPrice*discountPrice) - (standardPrice*discountPromotionPrice);
+
             RentalSalaryMonitor.totalSalary += standardPrice;
+
             
             this.listOfPassengers.get(0).bill = new Bill(
             		standardPrice, 
