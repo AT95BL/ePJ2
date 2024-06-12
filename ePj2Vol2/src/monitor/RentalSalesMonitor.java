@@ -1,6 +1,8 @@
 package monitor;
 
 /**
+ * @author AT95
+ * @version 1
  * Monitor class for tracking rental sales of different types of vehicles.
  */
 public class RentalSalesMonitor {

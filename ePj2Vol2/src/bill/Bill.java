@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * The {@code Bill} class represents a bill for a passenger's trip, including the total cost, 
  * vehicle type, passenger information, and whether there was a malfunction during the trip.
- * This class extends {@code Thread} and implements {@code Serializable}.
+ * This class implements {@code Serializable}.
  * If there was a malfunction, the total cost is set to 0.
  * 
  * <p>

@@ -108,195 +108,389 @@ public abstract class Vehicle extends Thread implements Serializable {
         this.type = type;
     }
 
-    // get/set methods for class attributes ..
-    // Getter i setter metode za 'id'
+    /**
+     * Retrieves the vehicle ID.
+     *
+     * @return The vehicle ID.
+     */
     public String getVehicleId() {
         return this.vehicleId;
     }
-
+    
+    /**
+     * Sets the vehicle ID.
+     *
+     * @param id The vehicle ID to set.
+     */
     public void setVehicleId(String id) {
         this.vehicleId = id;
     }
 
-    // Getter i setter metode za 'manufacturer'
+    /**
+     * Retrieves the manufacturer.
+     *
+     * @return The manufacturer.
+     */
     public String getManufacturer() {
         return manufacturer;
     }
-
+    
+    /**
+     * Sets the manufacturer.
+     *
+     * @param manufacturer The manufacturer to set.
+     */
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
 
-    // Getter i setter metode za 'model'
+    /**
+     * Retrieves the model.
+     *
+     * @return The model.
+     */
     public String getModel() {
         return model;
     }
-
+    
+    /**
+     * Sets the model.
+     *
+     * @param model The model to set.
+     */
     public void setModel(String model) {
         this.model = model;
     }
 
-    // Getter i setter metode za 'purchaseDate'
+    /**
+     * Retrieves the purchase date.
+     *
+     * @return The purchase date.
+     */
     public Date getpurchaseDate() {
         return purchaseDate;
     }
-
+    
+    /**
+     * Sets the purchase date.
+     *
+     * @param purchaseDate The purchase date to set.
+     */
     public void setpurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
-    // Getter i setter metode za 'purchasePrice'
+    /**
+     * Retrieves the purchase price.
+     *
+     * @return The purchase price.
+     */
     public double getPurchasePrice() {
         return purchasePrice;
     }
-
+    
+    /**
+     * Sets the purchase price.
+     *
+     * @param purchasePrice The purchase price to set.
+     */
     public void setPurchasePrice(double purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
 
-    // Getter i setter metode za 'autonomyOrMaxSpeed'
+    /**
+     * Retrieves the autonomy or maximum speed.
+     *
+     * @return The autonomy or maximum speed.
+     */
     public double getAutonomyOrMaxSpeed() {
         return autonomyOrMaxSpeed;
     }
-
+    
+    /**
+     * Sets the autonomy or maximum speed.
+     *
+     * @param autonomyOrMaxSpeed The autonomy or maximum speed to set.
+     */
     public void setAutonomyOrMaxSpeed(double autonomyOrMaxSpeed) {
         this.autonomyOrMaxSpeed = autonomyOrMaxSpeed;
     }
 
-    // Getter i setter metode za 'maxSpeed'
+    /**
+     * Retrieves the maximum speed.
+     *
+     * @return The maximum speed.
+     */
     public double getMaxSpeed() {
         return maxSpeed;
     }
-
+    
+    /**
+     * Sets the maximum speed.
+     *
+     * @param maxSpeed The maximum speed to set.
+     */
     public void setMaxSpeed(double maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 
-    // Getter i setter metode za 'description'
+    /**
+     * Retrieves the description.
+     *
+     * @return The description.
+     */
     public String getDescription() {
         return description;
     }
-
+    
+    /**
+     * Sets the description.
+     *
+     * @param description The description to set.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    // Getter i setter metode za 'type'
+    /**
+     * Retrieves the type.
+     *
+     * @return The type.
+     */
     public String getType() {
         return this.type;
     }
-
+    
+    /**
+     * Sets the type.
+     *
+     * @param type The type to set.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
-    // Getter i setter metode za 'battery'
+    /**
+     * Retrieves the battery.
+     *
+     * @return The battery.
+     */
     public Battery getBattery() {
         return this.battery;
     }
-
+    
+    /**
+     * Sets the battery.
+     *
+     * @param battery The battery to set.
+     */
     public void setBattery(Battery battery) {
         this.battery = battery;
     }
 
-    // Getter i setter metode za 'malfunction'
+    /**
+     * Retrieves the malfunction status.
+     *
+     * @return true if the vehicle has a malfunction, false otherwise.
+     */
     public boolean isMalfunction() {
         return malfunction;
     }
-
+    
+    /**
+     * Sets the malfunction status.
+     *
+     * @param malfunction The malfunction status to set.
+     */
     public void setMalfunction(boolean malfunctione) {
         this.malfunction = malfunctione;
     }
 
-    // Getter i setter metode za 'MalfunctionModel'
+    /**
+     * Retrieves the malfunction model.
+     *
+     * @return The malfunction model.
+     */
     public Malfunction getMalfunctionModel() {
         return this.malfunctionModel;
     }
-
+    
+    /**
+     * Sets the malfunction model.
+     *
+     * @param malfunctionModel The malfunction model to set.
+     */
     public void setMalfunctionModel(Malfunction malfunctionModel) {
         this.malfunctionModel = malfunctionModel;
     }
 
-    // Getter i setter metode za 'positionX'
+    /**
+     * Retrieves the X position.
+     *
+     * @return The X position.
+     */
     public int getPositionX() {
         return positionX;
     }
-
+    
+    /**
+     * Sets the X position.
+     *
+     * @param positionX The X position to set.
+     */
     public void setPositionX(int positionX) {
         this.positionX = positionX;
     }
 
-    // Getter i setter metode za 'positionY'
+    /**
+     * Retrieves the Y position.
+     *
+     * @return The Y position.
+     */
     public int getPositionY() {
         return positionY;
     }
-
+    
+    /**
+     * Sets the Y position.
+     *
+     * @param positionY The Y position to set.
+     */
     public void setPositionY(int positionY) {
         this.positionY = positionY;
     }
 
-    // Getter i setter metode za 'startPositionX'
+    /**
+     * Retrieves the start X position.
+     *
+     * @return The start X position.
+     */
     public int getStartPositionX() {
         return startPositionX;
     }
-
+    
+    /**
+     * Sets the start X position.
+     *
+     * @param startPositionX The start X position to set.
+     */
     public void setStartPositionX(int startPositionX) {
         this.startPositionX = startPositionX;
     }
 
-    // Getter i setter metode za 'startPositionY'
+    /**
+     * Retrieves the start Y position.
+     *
+     * @return The start Y position.
+     */
     public int getStartPositionY() {
         return startPositionY;
     }
-
+    
+    /**
+     * Sets the start Y position.
+     *
+     * @param startPositionY The start Y position to set.
+     */
     public void setStartPositionY(int startPositionY) {
         this.startPositionY = startPositionY;
     }
 
-    // Getter i setter metode za 'destinationPositionX'
+    /**
+     * Retrieves the destination X position.
+     *
+     * @return The destination X position.
+     */
     public int getDestinationPositionX() {
         return destinationPositionX;
     }
-
+    
+    /**
+     * Sets the destination X position.
+     *
+     * @param destinationPositionX The destination X position to set.
+     */
     public void setDestinationPositionX(int destinationPositionX) {
         this.destinationPositionX = destinationPositionX;
     }
 
-    // Getter i setter metode za 'destinationPositionY'
+    /**
+     * Retrieves the destination Y position.
+     *
+     * @return The destination Y position.
+     */
     public int getDestinationPositionY() {
         return destinationPositionY;
     }
-
+    
+    /**
+     * Sets the destination Y position.
+     *
+     * @param destinationPositionX The destination Y position to set.
+     */
     public void setDestinationPositionY(int destinationPositionY) {
         this.destinationPositionY = destinationPositionY;
     }
 
-    // Getter i setter metode za 'numberOfPassengers'
+    /**
+     * Retrieves the number of passengers.
+     *
+     * @return The number of passengers.
+     */
     public int getNumberOfPassengers() {
         return numberOfPassengers;
     }
-
+    
+    /**
+     * Sets the number of passengers.
+     *
+     * @param numberOfPassengers The number of passengers to set.
+     */
     public void setNumberOfPassengers(int numberOfPassengers) {
         this.numberOfPassengers = numberOfPassengers;
     }
 
-    // Getter i setter metode za 'listOfPassengers'
+    /**
+     * Retrieves the list of passengers.
+     *
+     * @return The list of passengers.
+     */
     public List<Passenger> getListOfPassengers() {
         return listOfPassengers;
     }
-
+    
+    /**
+     * Sets the list of passengers.
+     *
+     * @param listOfPassengers The list of passengers to set.
+     */
     public void setListOfPassengers(List<Passenger> listOfPassengers) {
         this.listOfPassengers = listOfPassengers;
     }
     
+    /**
+     * Adds a passenger to the list of passengers.
+     *
+     * @param passenger The passenger to add.
+     */
     public void addPassenger(Passenger passenger) {
     	this.listOfPassengers.add(passenger);
     }
     
+    /**
+     * Retrieves the duration.
+     *
+     * @return The duration.
+     */
     public long getDuration() {
         return this.duration;
     }
-
+    
+    /**
+     * Sets the duration.
+     *
+     * @param duration The duration to set.
+     */
     public void setDuration(long duration) {
         this.duration = duration;
     }

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 import model.*;
 
-/**
+/**@author AT95
+ * @version 1
  * Monitor class for tracking rental repairment costs for different types of vehicles.
  */
 public class RentalRepairmentCostsMonitor {
@@ -98,7 +99,11 @@ public class RentalRepairmentCostsMonitor {
                 "Scooter Repairs Total: $" + String.format("%.2f", scooterRepairsTotal);
     }
     
-    // u skladu sa brojem indeksa ..
+    /**
+     * Determines the most loss-making vehicle type based on the total repair costs.
+     *
+     * @return A list of vehicles of the most loss-making type.
+     */
     public static List<Vehicle> getmostLossMakingVehicleType(){
     	if(getCarRepairsTotal() > getBikeRepairsTotal() 
     			&& getCarRepairsTotal() > getScooterRepairsTotal())

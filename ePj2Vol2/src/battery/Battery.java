@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author AT95
  * @version 1
  * The {@code Battery} class represents a battery with a specific capacity and status.
- * This class extends {@code Thread} and implements {@code Serializable}.
+ * This class implements {@code Serializable}.
  * The capacity can be one of three values: 100, 200, or 300, corresponding to scooters,
  * bikes, and cars respectively. The status of the battery is represented as a percentage.
  * The class includes methods for charging and decreasing the battery status, as well as

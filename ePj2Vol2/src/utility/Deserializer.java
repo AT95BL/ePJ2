@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.List;
 import model.Vehicle;
 
-/**
+/**@author AT95
+ * @version 1
  * The Deserializer class provides functionality to deserialize a list of Vehicle objects
  * from a file. The deserialized file is read from a specified folder with a specified name.
  */
