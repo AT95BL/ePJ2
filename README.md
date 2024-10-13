@@ -175,5 +175,3 @@ This project is developed as part of the **Programski jezici 2** course at the *
 - **Andrej Trožić** – Student at Elektrotehnički fakultet, Banja Luka  
 
 ---
-
-This version should be error-free for copying and pasting directly into your project’s **README.md** file.
