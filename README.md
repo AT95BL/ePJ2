@@ -1,10 +1,4 @@
----
-
 # ePJ2: E-Mobility Rental System  
-
-**Elektrotehnički fakultet, Banja Luka**  
-**Programski jezici 2 – Projektni zadatak**  
-**Maj 2024**
 
 ePJ2 is a rental system for electric cars, bicycles, and scooters designed to simulate the company’s operations in the city of Java. It manages vehicle rentals, monitors vehicle status, and generates financial reports based on predefined data.  
 
