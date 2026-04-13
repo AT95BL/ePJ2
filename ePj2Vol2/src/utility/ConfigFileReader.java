@@ -6,31 +6,25 @@ import java.io.Serializable;
 import java.util.Properties;
 
 /**
- * @author AT95
- * @version 1
- * Utility class for reading configuration properties from a file.
- * This implements {@code Serializable}
+ * Reads key-value configuration properties from {@code config.properties}.
+ * Implements {@link Serializable} because {@code Vehicle} (which holds a reference
+ * to this reader) is itself serializable.
  */
-public class ConfigFileReader implements Serializable{
+public class ConfigFileReader implements Serializable {
+
     private Properties properties;
-    
-    /**
-     * Constructs a new ConfigFileReader and loads properties from the configuration file.
-     */
+
     public ConfigFileReader() {
         properties = new Properties();
         try (FileInputStream input = new FileInputStream("config.properties")) {
             properties.load(input);
-        } catch (IOException io) {
-            io.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
-    
+
     /**
-     * Retrieves the value of the specified property from the configuration file.
-     *
-     * @param key The key of the property to retrieve.
-     * @return The value associated with the specified key, or null if the key is not found.
+     * Returns the value for {@code key}, or {@code null} if not found.
      */
     public String getProperty(String key) {
         return properties.getProperty(key);

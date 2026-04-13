@@ -1,120 +1,54 @@
 package malfunction;
 
-import java.util.Date;
-
 import model.Vehicle;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @author AT95
- * @version 1
- * The {@code Malfunction} class represents a malfunction event that occurs in a vehicle.
- * This class implements {@code Serializable}.
- * It includes details about the malfunction description, the date it happened, and the
- * vehicle that is broken.
- * 
- * <p>
- * Example usage:
- * <pre>
- * {@code
- * Vehicle vehicle = new Vehicle();
- * Malfunction malfunction = new Malfunction("Engine failure", new Date(), vehicle);
- * System.out.println(malfunction);
- * }
- * </pre>
- * </p>
- * 
- * @see Vehicle
+ * Records a single malfunction event: what broke, when it was detected,
+ * and which vehicle is affected.
  */
-public class Malfunction implements Serializable{
-	public static final String MALFUNCTION_MESSAGE = "MALFUNCTION OCCURED!!";
-	
-	public String malfunctionDescription;	//	opis kvara
-	public Date malfunctionHappenDate;		//	datum javljanja-detekcije kvara
-	public Vehicle brokenVehicle;			//	pokvareno vozilo
-	
-	/**
-     * Constructs a new {@code Malfunction} with default values.
-     * All fields are initialized to {@code null}.
-     */
-	public Malfunction() {
-		this.malfunctionDescription=null;
-		this.malfunctionHappenDate=null;
-		this.brokenVehicle=null;
-	}
-	
-	/**
-     * Constructs a new {@code Malfunction} with the specified description, date, and vehicle.
-     * 
-     * @param malfunctionDescription the description of the malfunction
-     * @param malfunctionHappenDate the date the malfunction was detected
-     * @param brokenVehicle the vehicle that is broken
-     */
-	public Malfunction(String malfunctionDescription, Date malfunctionHappenDate, Vehicle brokenVehicle) {
-		this.malfunctionDescription=malfunctionDescription;
-		this.malfunctionHappenDate=malfunctionHappenDate;
-		this.brokenVehicle=brokenVehicle;
-	}
-	
-	// getters/setters
-	
-	/**
-     * Sets the description of the malfunction.
-     * 
-     * @param malfunctionDescription the description of the malfunction
-     */
-    public void setMalfunctionDescription(String malfunctionDescription) {
-        this.malfunctionDescription = malfunctionDescription;
-    }
+public class Malfunction implements Serializable {
+
+    public static final String MALFUNCTION_MESSAGE = "MALFUNCTION DETECTED";
+
+    private String  description;
+    private Date    detectedAt;
+    private Vehicle affectedVehicle;
+
+    /** Default constructor — all fields {@code null}. */
+    public Malfunction() {}
 
     /**
-     * Returns the date the malfunction was detected.
-     * 
-     * @return the date the malfunction was detected
+     * @param description     human-readable fault description
+     * @param detectedAt      timestamp when the fault was detected
+     * @param affectedVehicle the vehicle that broke down
      */
-    public Date getMalfunctionHappenDate() {
-        return malfunctionHappenDate;
+    public Malfunction(String description, Date detectedAt, Vehicle affectedVehicle) {
+        this.description     = description;
+        this.detectedAt      = detectedAt;
+        this.affectedVehicle = affectedVehicle;
     }
 
-    /**
-     * Sets the date the malfunction was detected.
-     * 
-     * @param malfunctionHappenDate the date the malfunction was detected
-     */
-    public void setMalfunctionHappenDate(Date malfunctionHappenDate) {
-        this.malfunctionHappenDate = malfunctionHappenDate;
-    }
+    // -------------------------------------------------------------------------
+    // Accessors
+    // -------------------------------------------------------------------------
 
-    /**
-     * Returns the vehicle that is broken.
-     * 
-     * @return the vehicle that is broken
-     */
-    public Vehicle getBrokenVehicle() {
-        return brokenVehicle;
-    }
+    public String  getDescription()                       { return description; }
+    public void    setDescription(String description)     { this.description = description; }
 
-    /**
-     * Sets the vehicle that is broken.
-     * 
-     * @param brokenVehicle the vehicle that is broken
-     */
-    public void setBrokenVehicle(Vehicle brokenVehicle) {
-        this.brokenVehicle = brokenVehicle;
+    public Date    getDetectedAt()                        { return detectedAt; }
+    public void    setDetectedAt(Date detectedAt)         { this.detectedAt = detectedAt; }
+
+    public Vehicle getAffectedVehicle()                           { return affectedVehicle; }
+    public void    setAffectedVehicle(Vehicle affectedVehicle)    { this.affectedVehicle = affectedVehicle; }
+
+    @Override
+    public String toString() {
+        return "Malfunction Report\n"
+             + "  Description : " + description + "\n"
+             + "  Detected at : " + detectedAt  + "\n"
+             + "  Vehicle     : " + (affectedVehicle != null ? affectedVehicle.getVehicleId() : "N/A");
     }
-	
-    /**
-     * Returns a string representation of the malfunction.
-     * 
-     * @return a string representation of the malfunction
-     */
-    
-	@Override
-	public String toString() {
-		return "Malfunction Description: " + this.malfunctionDescription + "\n"
-				+ "Date Occured: " + this.malfunctionHappenDate + "\n"
-				+ this.brokenVehicle;
-	}
 }
-

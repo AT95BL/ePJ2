@@ -1,78 +1,111 @@
 package gui;
 
 import javacitymap.JavaCityMap;
-import model.Car;
-import model.Bike;
-import model.Scooter;
 import model.Vehicle;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @author AT95
- * @version 1
- * The MapPanel class represents a custom JPanel that visualizes the city map and the vehicles on it.
- * The panel displays a grid where different types of vehicles are represented by different colors.
+ * Dark tactical map panel.
  */
 public class MapPanel extends JPanel {
-    private static final int CELL_SIZE = 30;
-    
-    /**
-     * Paints the component. This method is overridden to provide custom painting code.
-     * It draws the grid and fills cells with different colors based on the type of vehicle present.
-     *
-     * @param g the Graphics object used to draw the component
-     */
+
+    private static final int CELL           = 28;
+    private static final int DOWNTOWN_LIMIT = 10;
+
+    public MapPanel() {
+        setBackground(AppTheme.BG_DEEP);
+        setOpaque(true);
+        // Repaint at ~30 fps so vehicle movement is visually smooth
+        new Timer(33, e -> repaint()).start();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Set color based on position
-        for (int i = 0; i < JavaCityMap.NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < JavaCityMap.NUMBER_OF_COLUMNS; j++) {
-                if (i <= 10 && j <= 10) {
-                    g.setColor(Color.BLUE);
-                } else {
-                    g.setColor(Color.GRAY);
-                }
-                g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        for (int row = 0; row < JavaCityMap.NUMBER_OF_ROWS; row++) {
+            for (int col = 0; col < JavaCityMap.NUMBER_OF_COLUMNS; col++) {
+                int px = col * CELL;
+                int py = row * CELL;
 
-                // Draw grid lines
-                g.setColor(Color.BLACK);
-                g.drawRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                
-                // Determine the type of vehicle and set color accordingly
-                Object obj = JavaCityMap.map[i][j];
-                if (obj instanceof Car) {
-                    g.setColor(Color.RED);
-                    g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                } else if (obj instanceof Bike) {
-                    g.setColor(Color.YELLOW);
-                    g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                } else if (obj instanceof Scooter) {
-                    g.setColor(Color.GREEN);
-                    g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                // --- OVDJE JE IZMJENA ZA VIDLJIVOST ZONA ---
+                boolean downtown = row <= DOWNTOWN_LIMIT && col <= DOWNTOWN_LIMIT;
+                if (downtown) {
+                    // Svjetlija plava boja za Downtown zonu
+                    g2.setColor(new Color(0x0A, 0x1A, 0x3A)); 
+                } else {
+                    // Skoro crna boja za periferiju (Suburban)
+                    g2.setColor(AppTheme.BG_DEEP); 
                 }
+                g2.fillRect(px, py, CELL, CELL);
+
+                // Vehicle cell with glow
+                Object occupant = JavaCityMap.map[row][col];
+                if (occupant instanceof Vehicle vehicle) {
+                    paintVehicleCell(g2, vehicle, px, py);
+                }
+
+                // Grid lines (suptilne linije mreže)
+                g2.setColor(new Color(255, 255, 255, 15)); 
+                g2.drawRect(px, py, CELL, CELL);
             }
         }
+
+        paintZoneBoundary(g2);
+        g2.dispose();
     }
 
-    /**
-     * Requests a repaint of the map. This method can be called to refresh the display
-     * when the underlying data changes.
-     */
-    public void updateMap() {
-        repaint();
+    private void paintVehicleCell(Graphics2D g2, Vehicle vehicle, int px, int py) {
+        Color base = vehicle.getMapColor();
+
+        // Glow rings
+        for (int layer = 3; layer >= 1; layer--) {
+            int spread = layer * 3;
+            g2.setColor(withAlpha(base, 28));
+            g2.fillRect(px - spread, py - spread, CELL + spread * 2, CELL + spread * 2);
+        }
+
+        // Filled body
+        g2.setColor(withAlpha(base, 200));
+        g2.fillRect(px + 2, py + 2, CELL - 4, CELL - 4);
+
+        // Top-half highlight
+        g2.setColor(withAlpha(Color.WHITE, 55));
+        g2.fillRect(px + 4, py + 4, CELL - 8, (CELL - 8) / 2);
+
+        // Crisp border
+        g2.setColor(base);
+        g2.setStroke(new BasicStroke(1.2f));
+        g2.drawRect(px + 2, py + 2, CELL - 5, CELL - 5);
+        g2.setStroke(new BasicStroke(1f));
     }
-    
-    /**
-     * Gets the preferred size of the panel. This is overridden to ensure the panel
-     * is large enough to display the entire map.
-     *
-     * @return the preferred size of the panel
-     */
+
+    private void paintZoneBoundary(Graphics2D g2) {
+        int bx = (DOWNTOWN_LIMIT + 1) * CELL;
+        int by = (DOWNTOWN_LIMIT + 1) * CELL;
+        float[] dash = {4f, 4f};
+        g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, dash, 0f));
+        // Svijetlo cijan linija razgraničenja
+        g2.setColor(AppTheme.ACCENT_CYAN); 
+        g2.drawLine(bx, 0,  bx, JavaCityMap.NUMBER_OF_ROWS    * CELL);
+        g2.drawLine(0,  by, JavaCityMap.NUMBER_OF_COLUMNS * CELL, by);
+        g2.setStroke(new BasicStroke(1f));
+    }
+
+    private static Color withAlpha(Color c, int alpha) {
+        return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+    }
+
+    public void updateMap() { repaint(); }
+
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(JavaCityMap.NUMBER_OF_COLUMNS * CELL_SIZE, JavaCityMap.NUMBER_OF_ROWS * CELL_SIZE);
+        return new Dimension(
+                JavaCityMap.NUMBER_OF_COLUMNS * CELL,
+                JavaCityMap.NUMBER_OF_ROWS    * CELL);
     }
 }

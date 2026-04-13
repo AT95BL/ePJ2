@@ -1,184 +1,112 @@
 package javacitymap;
 
+import gui.MapPanel;
 import model.Vehicle;
-import gui.*;
 
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author AT95
- * @version 1
- * The {@code JavaCityMap} class represents a map of a city with a grid layout. It manages
- * the placement and movement of vehicles within the city, ensuring thread safety for concurrent
- * updates to the map.
- * 
- * <p>
- * Example usage:
- * <pre>
- * {@code
- * MapPanel mapPanel = new MapPanel();
- * JavaCityMap cityMap = new JavaCityMap(mapPanel);
- * Vehicle vehicle = new Vehicle();
- * cityMap.updateCell(0, 0, vehicle);
- * System.out.println(cityMap);
- * }
- * </pre>
- * </p>
- * 
- * @see Vehicle
- * @see MapPanel
+ * Represents the city grid on which vehicles move.
+ *
+ * <p>The grid is {@value #NUMBER_OF_ROWS} × {@value #NUMBER_OF_COLUMNS}.
+ * Rows 0–{@value #DOWNTOWN_UPPER_ROW} form the "wide" (downtown) zone;
+ * the remaining rows form the narrower suburban zone.
+ *
+ * <p>Thread safety: every cell has its own {@link ReentrantLock}, so concurrent
+ * vehicle threads can read/write different cells without contention.
  */
 public class JavaCityMap {
-    public static final int NUMBER_OF_ROWS = 20;
+
+    public static final int NUMBER_OF_ROWS    = 20;
     public static final int NUMBER_OF_COLUMNS = 20;
-    public static final int WIDE_PART_OF_THE_CITY_LOWER_BOUND = 0;
-    public static final int WIDE_PART_OF_THE_CITY_UPPER_BOUND = 10;
-    
-    public static Object[][] map;
-    public static ReentrantLock[][] cellLocks;  // Locks for each cell
-    public static MapPanel mapPanel;
-    
+
+    /** Inclusive upper-row index of the downtown (wide) zone. */
+    public static final int DOWNTOWN_LOWER_ROW = 0;
+    public static final int DOWNTOWN_UPPER_ROW = 10;
+
+    public static Object[][]        map;
+    public static ReentrantLock[][] cellLocks;
+    public static MapPanel          mapPanel;
+
     /**
-     * Constructs a new {@code JavaCityMap} with the specified map panel.
-     * Initializes the map grid and cell locks.
-     * 
-     * @param mapPanel the {@code MapPanel} used to update the GUI representation of the map
+     * Initialises the grid and registers the panel that will be repainted
+     * whenever the map changes.
+     *
+     * @param mapPanel the Swing panel responsible for rendering the grid
      */
     public JavaCityMap(MapPanel mapPanel) {
-        map = new Object[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
+        map       = new Object[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
         cellLocks = new ReentrantLock[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
-        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
-                cellLocks[i][j] = new ReentrantLock();
+        for (int row = 0; row < NUMBER_OF_ROWS; row++) {
+            for (int col = 0; col < NUMBER_OF_COLUMNS; col++) {
+                cellLocks[row][col] = new ReentrantLock();
             }
         }
         JavaCityMap.mapPanel = mapPanel;
     }
 
-    /**
-     * Checks if the specified map cell is clear (i.e., unoccupied).
-     * 
-     * @param x the row index
-     * @param y the column index
-     * @return {@code true} if the cell is clear, {@code false} otherwise
-     */
-    public static boolean isCellClear(int x, int y) {
-    	//return map[x][y] == null;
-        cellLocks[x][y].lock();
-        try {
-            return map[x][y] == null;
-        } finally {
-            cellLocks[x][y].unlock();
-        }
+    // -------------------------------------------------------------------------
+    // Cell operations
+    // -------------------------------------------------------------------------
+
+    /** Returns {@code true} if the cell at (row, col) is unoccupied. */
+    public static boolean isCellClear(int row, int col) {
+        cellLocks[row][col].lock();
+        try { return map[row][col] == null; }
+        finally { cellLocks[row][col].unlock(); }
+    }
+
+    /** Removes any occupant from the cell at (row, col) and repaints. */
+    public static void clearCell(int row, int col) {
+        cellLocks[row][col].lock();
+        try { map[row][col] = null; mapPanel.updateMap(); }
+        finally { cellLocks[row][col].unlock(); }
+    }
+
+    /** Places {@code vehicle} in the cell at (row, col) and repaints. */
+    public static void updateCell(int row, int col, Vehicle vehicle) {
+        cellLocks[row][col].lock();
+        try { map[row][col] = vehicle; mapPanel.updateMap(); }
+        finally { cellLocks[row][col].unlock(); }
+    }
+
+    // -------------------------------------------------------------------------
+    // Boundary checks
+    // -------------------------------------------------------------------------
+
+    public static synchronized boolean isAtEasternEdge(int col)  { return col == NUMBER_OF_COLUMNS - 1; }
+    public static synchronized boolean isAtWesternEdge(int col)  { return col == 0; }
+    public static synchronized boolean isAtNorthernEdge(int row) { return row == 0; }
+    public static synchronized boolean isAtSouthernEdge(int row) { return row == NUMBER_OF_ROWS - 1; }
+
+    /** Returns {@code true} if (row, col) is a valid grid coordinate. */
+    public static synchronized boolean isValidCell(int row, int col) {
+        return row >= 0 && row < NUMBER_OF_ROWS
+            && col >= 0 && col < NUMBER_OF_COLUMNS;
     }
 
     /**
-     * Clears the specified map cell.
-     * 
-     * @param x the row index
-     * @param y the column index
+     * Returns {@code true} if (row, col) falls within the downtown (wide) zone.
+     * The zone covers rows {@value #DOWNTOWN_LOWER_ROW}–{@value #DOWNTOWN_UPPER_ROW}
+     * OR columns 0–{@value #DOWNTOWN_UPPER_ROW}.
      */
-    public static void clearCell(int x, int y) {
-    	//map[x][y] = null;
-        cellLocks[x][y].lock();
-        try {
-            map[x][y] = null;
-            mapPanel.updateMap();
-        } finally {
-            cellLocks[x][y].unlock();
-        }
+    public static synchronized boolean checkWidePartOfTheJavaCity(int row, int col) {
+        return (row >= DOWNTOWN_LOWER_ROW && row <= DOWNTOWN_UPPER_ROW)
+            || (col >= DOWNTOWN_LOWER_ROW && col <= DOWNTOWN_UPPER_ROW);
     }
 
-    /**
-     * Updates the specified map cell with a {@code Vehicle}.
-     * 
-     * @param x the row index
-     * @param y the column index
-     * @param vehicle the {@code Vehicle} to place in the cell
-     */
-    public static void updateCell(int x, int y, Vehicle vehicle) {
-    	//map[x][y] = vehicle;
-        cellLocks[x][y].lock();
-        try {
-            map[x][y] = vehicle;
-            mapPanel.updateMap();
-        } finally {
-            cellLocks[x][y].unlock();
-        }
-    }
+    // -------------------------------------------------------------------------
+    // Debug
+    // -------------------------------------------------------------------------
 
-	
-    /**
-     * Checks if the specified position has reached the maximum left limit of the map.
-     * 
-     * @param positionY the column index
-     * @return {@code true} if the position is at the maximum left limit, {@code false} otherwise
-     */
-	public static synchronized boolean checkLeftBoundaryMaxLimit(int positionY) {return positionY == NUMBER_OF_COLUMNS-1; }
-	
-	/**
-     * Checks if the specified position has reached the maximum right limit of the map.
-     * 
-     * @param positionY the column index
-     * @return {@code true} if the position is at the maximum right limit, {@code false} otherwise
-     */
-	public static synchronized boolean checkRightBoundaryMaxLimit(int positionY) {return positionY == 0;}
-	
-	/**
-     * Checks if the specified position has reached the maximum upper limit of the map.
-     * 
-     * @param positionX the row index
-     * @return {@code true} if the position is at the maximum upper limit, {@code false} otherwise
-     */
-	public  static synchronized boolean checkUpperBoundaryMaxLimit(int positionX) {return positionX == 0;}
-	
-	/**
-     * Checks if the specified position has reached the bottom of the map.
-     * 
-     * @param positionX the row index
-     * @return {@code true} if the position is at the bottom of the map, {@code false} otherwise
-     */
-	public static synchronized boolean checkLowerBoundaryMaxLimit(int positionX) {return positionX == NUMBER_OF_ROWS-1;}
-	
-	/**
-     * Checks if the specified cell indexes are valid.
-     * 
-     * @param x the row index
-     * @param y the column index
-     * @return {@code true} if the cell indexes are valid, {@code false} otherwise
-     */
-	public static synchronized boolean checkValidCell(int x, int y) {return x>=0 && x <=NUMBER_OF_ROWS-1 && y>=0 && y <= NUMBER_OF_COLUMNS-1; }
-	
-	/**
-     * Checks if the specified cell indexes are inside the wider part of JavaCity.
-     * 
-     * @param x the row index
-     * @param y the column index
-     * @return {@code true} if the cell indexes are in the wider part of JavaCity, {@code false} otherwise
-     */
-	public  static synchronized boolean checkWidePartOfTheJavaCity(int x, int y) { 
-		return x >= WIDE_PART_OF_THE_CITY_LOWER_BOUND 
-				&& x <= WIDE_PART_OF_THE_CITY_UPPER_BOUND 
-				|| y >= WIDE_PART_OF_THE_CITY_LOWER_BOUND 
-				&& y<= WIDE_PART_OF_THE_CITY_UPPER_BOUND; }
-	
-	/**
-     * Returns a string representation of the map, showing which cells are occupied by vehicles.
-     * 
-     * @return a string representation of the map
-     */
-	@Override
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
-                if (map[i][j] == null) {
-                    sb.append("[ ]");
-                } else {
-                    sb.append("[V]"); // Assuming 'V' stands for a Vehicle object
-                }
+        for (int row = 0; row < NUMBER_OF_ROWS; row++) {
+            for (int col = 0; col < NUMBER_OF_COLUMNS; col++) {
+                sb.append(map[row][col] == null ? "[ ]" : "[V]");
             }
-            sb.append("\n");
+            sb.append('\n');
         }
         return sb.toString();
     }

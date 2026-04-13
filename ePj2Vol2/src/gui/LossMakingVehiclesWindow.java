@@ -1,43 +1,72 @@
 package gui;
 
-import javax.swing.*;
 import model.Vehicle;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
 
 /**
- * @author AT95
- * @version 1
- * The LossMakingVehiclesWindow class represents a window that displays the most loss-making vehicles.
- * It extends JFrame and contains a JTextArea to show the vehicle information.
+ * Dark-styled popup listing the most loss-making vehicles after a simulation run.
  */
 public class LossMakingVehiclesWindow extends JFrame {
-    private JTextArea textArea;
-    
-    /**
-     * Constructs a new LossMakingVehiclesWindow.
-     * Initializes the window with a title, size, and a JTextArea to display vehicle information.
-     * 
-     * @param vehicles the list of vehicles that are most loss-making
-     */
-    public LossMakingVehiclesWindow(List<Vehicle> vehicles) {
-        setTitle("Most Loss Making Vehicles");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        textArea = new JTextArea();
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane, BorderLayout.CENTER);
 
-        StringBuilder sb = new StringBuilder("Most Loss Making Vehicles:\n");
-        if (vehicles != null) {
-            for (Vehicle vehicle : vehicles) {
-                sb.append(vehicle.toString()).append("\n");
+    public LossMakingVehiclesWindow(List<Vehicle> vehicles) {
+        AppTheme.apply();
+        setTitle("Loss-Making Vehicles Report");
+        setSize(680, 460);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBackground(AppTheme.BG_DEEP);
+
+        JPanel root = new JPanel(new BorderLayout());
+        root.setBackground(AppTheme.BG_DEEP);
+
+        // Header strip
+        JPanel header = new JPanel(new BorderLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                g.setColor(AppTheme.BG_HEADER);
+                g.fillRect(0, 0, getWidth(), getHeight());
+                g.setColor(AppTheme.ACCENT_AMBER);
+                g.fillRect(0, getHeight() - 1, getWidth(), 1);
             }
+        };
+        header.setOpaque(false);
+        header.setPreferredSize(new Dimension(0, 42));
+        header.setBorder(new EmptyBorder(0, 16, 0, 16));
+
+        JLabel title = new JLabel("⚠   MOST LOSS-MAKING VEHICLES");
+        title.setFont(AppTheme.FONT_HEADING);
+        title.setForeground(AppTheme.ACCENT_AMBER);
+        header.add(title, BorderLayout.WEST);
+
+        // Content
+        JTextArea area = AppTheme.logArea();
+        area.setFont(AppTheme.FONT_MONO_MD);
+        StringBuilder sb = new StringBuilder();
+        if (vehicles != null && !vehicles.isEmpty()) {
+            vehicles.forEach(v -> sb.append(v).append("\n──────────────────────\n"));
         } else {
             sb.append("No data available.");
         }
-        textArea.setText(sb.toString());
+        area.setText(sb.toString());
+
+        JPanel content = new JPanel(new BorderLayout());
+        content.setBackground(AppTheme.BG_DEEP);
+        content.setBorder(new EmptyBorder(12, 12, 8, 12));
+        content.add(AppTheme.scrollPane(area), BorderLayout.CENTER);
+
+        // Footer
+        GlowButton closeBtn = new GlowButton("CLOSE");
+        closeBtn.addActionListener(e -> dispose());
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
+        footer.setBackground(AppTheme.BG_HEADER);
+        footer.add(closeBtn);
+
+        root.add(header,  BorderLayout.NORTH);
+        root.add(content, BorderLayout.CENTER);
+        root.add(footer,  BorderLayout.SOUTH);
+        setContentPane(root);
+        setLocationRelativeTo(null);
     }
 }

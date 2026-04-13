@@ -1,45 +1,26 @@
 package utility;
 
-import java.io.*;
-import java.util.List;
 import model.Vehicle;
 
-/**@author AT95
- * @version 1
- * The Deserializer class provides functionality to deserialize a list of Vehicle objects
- * from a file. The deserialized file is read from a specified folder with a specified name.
+import java.io.*;
+import java.util.List;
+
+/**
+ * Deserializes a {@link Vehicle} list that was previously written by {@link Serializer}.
  */
 public class Deserializer {
-	/** The name of the folder where the serialized file is stored. */
-    public static String FOLDER_NAME = "Reports";
-    
-    /** The name of the file from which the list of Vehicle objects will be deserialized. */
-    public static String FILE_NAME = "MostLossMakingVehicles.ser";
-    
-    /**
-     * Deserializes a list of Vehicle objects from a file.
-     *
-     * @return the deserialized list of Vehicle objects
-     */
+
+    public static final String FOLDER_NAME = "Reports";
+    public static final String FILE_NAME   = "MostLossMakingVehicles.ser";
+
+    @SuppressWarnings("unchecked")
     public static List<Vehicle> deserializeVehicleList() {
-        List<Vehicle> vehicleList = null;
-        try {
-        	// Create the file path
-            String filePath = FOLDER_NAME + File.separator + FILE_NAME;
-
-            // Open an input stream from the file
-            FileInputStream fileIn = new FileInputStream(filePath);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-
-            // Deserialize the list of vehicles
-            vehicleList = (List<Vehicle>) in.readObject();
-
-            // Close the streams
-            in.close();
-            fileIn.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        String filePath = FOLDER_NAME + File.separator + FILE_NAME;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (List<Vehicle>) in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
         }
-        return vehicleList;
     }
 }

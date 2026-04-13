@@ -1,65 +1,43 @@
 package monitor;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- * @author AT95
- * @version 1
- * Monitor class for tracking rental sales of different types of vehicles.
+ * Tracks the total number of completed rentals for each vehicle type.
+ *
+ * <p>All counters use {@link AtomicLong} so that concurrent vehicle threads
+ * can increment them without explicit synchronization.
  */
 public class RentalSalesMonitor {
-	/** Total number of car rentals. */
-    public static long CAR_RENTAL_TOTAL;
-    
-    /** Total number of bike rentals. */
-    public static long BIKE_RENTAL_TOTAL;
-    
-    /** Total number of scooter rentals. */
-    public static long SCOOTER_RENTAL_TOTAL;
-    
-    /**
-     * Increments the total number of car rentals.
-     */
-    public static void carRentalIncrement() {
-        ++CAR_RENTAL_TOTAL;
+
+    private static final AtomicLong carRentalCount     = new AtomicLong(0);
+    private static final AtomicLong bikeRentalCount    = new AtomicLong(0);
+    private static final AtomicLong scooterRentalCount = new AtomicLong(0);
+
+    public static void incrementCarRentals()     { carRentalCount.incrementAndGet(); }
+    public static void incrementBikeRentals()    { bikeRentalCount.incrementAndGet(); }
+    public static void incrementScooterRentals() { scooterRentalCount.incrementAndGet(); }
+
+    public static long getCarRentalCount()     { return carRentalCount.get(); }
+    public static long getBikeRentalCount()    { return bikeRentalCount.get(); }
+    public static long getScooterRentalCount() { return scooterRentalCount.get(); }
+
+    /** Returns a description of whichever vehicle type has the most rentals. */
+    public static String getTopPerformer() {
+        long cars     = carRentalCount.get();
+        long bikes    = bikeRentalCount.get();
+        long scooters = scooterRentalCount.get();
+
+        if (cars >= bikes && cars >= scooters)         return "Cars: "    + cars;
+        else if (bikes >= cars && bikes >= scooters)   return "Bikes: "   + bikes;
+        else                                           return "Scooters: " + scooters;
     }
-    
-    /**
-     * Increments the total number of bike rentals.
-     */
-    public static void bikeRentalIncrement() {
-        ++BIKE_RENTAL_TOTAL;
-    }
-    
-    /**
-     * Increments the total number of scooter rentals.
-     */
-    public static void scooterRentalIncrement() {
-        ++SCOOTER_RENTAL_TOTAL;
-    }
-    
-    /**
-     * Determines the best rental seller based on the total rental counts.
-     *
-     * @return A string indicating the best rental seller.
-     */
-    public static String getBestRentalSeller() {
-        if (CAR_RENTAL_TOTAL > BIKE_RENTAL_TOTAL && CAR_RENTAL_TOTAL > SCOOTER_RENTAL_TOTAL)
-            return "CAR_RENTAL_TOTAL: " + CAR_RENTAL_TOTAL;
-        else if (BIKE_RENTAL_TOTAL > CAR_RENTAL_TOTAL && BIKE_RENTAL_TOTAL > SCOOTER_RENTAL_TOTAL)
-            return "BIKE_RENTAL_TOTAL: " + BIKE_RENTAL_TOTAL;
-        else
-            return "SCOOTER_RENTAL_TOTAL: " + SCOOTER_RENTAL_TOTAL;
-    }
-    
-    /**
-     * Returns a string representation of the rental sales monitor.
-     *
-     * @return A string representation of the rental sales monitor.
-     */
+
     @Override
     public String toString() {
-        return "Rental Sales Monitor:\n" +
-                "Car Rental Total: " + CAR_RENTAL_TOTAL + "\n" +
-                "Bike Rental Total: " + BIKE_RENTAL_TOTAL + "\n" +
-                "Scooter Rental Total: " + SCOOTER_RENTAL_TOTAL;
+        return "=== Rental Sales Monitor ===\n"
+             + "Cars    : " + carRentalCount.get() + "\n"
+             + "Bikes   : " + bikeRentalCount.get() + "\n"
+             + "Scooters: " + scooterRentalCount.get();
     }
 }

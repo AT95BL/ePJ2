@@ -5,57 +5,40 @@ import passenger.Passenger;
 import java.io.Serializable;
 
 /**
- * The {@code Bill} class represents a bill for a passenger's trip, including the total cost, 
- * vehicle type, passenger information, and whether there was a malfunction during the trip.
- * This class implements {@code Serializable}.
- * If there was a malfunction, the total cost is set to 0.
- * 
- * <p>
- * Example usage:
- * <pre>
- * {@code
- * Passenger passenger = new Passenger("John Doe");
- * Bill bill = new Bill(100.0, "Car", passenger, false);
- * System.out.println(bill);
- * }
- * </pre>
- * </p>
+ * An itemised receipt for a single trip.
+ *
+ * <p>If {@code malfunction} is {@code true} the fare is waived (set to zero).
  */
-public class Bill implements Serializable{
-    private double total;
-    private String vehicleType;
-    private Passenger passenger;
-    private boolean malfunction;
-    
+public class Bill implements Serializable {
+
+    private final double    fare;
+    private final String    vehicleType;
+    private final Passenger passenger;
+    private final boolean   malfunction;
+
     /**
-     * Constructs a new {@code Bill} with the specified total, vehicle type, passenger, and malfunction status.
-     * If there is a malfunction, the total cost is set to 0.
-     * 
-     * @param total the total cost of the trip
-     * @param vehicleType the type of vehicle used for the trip
-     * @param passenger the passenger associated with the trip
-     * @param malfunction whether there was a malfunction during the trip
+     * @param fare        computed trip cost (will be set to 0 if malfunction is true)
+     * @param vehicleType display label of the vehicle type
+     * @param passenger   the passenger being billed
+     * @param malfunction whether a malfunction occurred during the trip
      */
-    public Bill(double total, String vehicleType, Passenger passenger, boolean malfunction) {
-        this.total = malfunction ? 0 : total;
+    public Bill(double fare, String vehicleType, Passenger passenger, boolean malfunction) {
+        this.fare        = malfunction ? 0 : fare;
         this.vehicleType = vehicleType;
-        this.passenger = passenger;
+        this.passenger   = passenger;
         this.malfunction = malfunction;
     }
-    
-    /**
-     * Returns a string representation of the bill, including the total cost, vehicle type,
-     * passenger name, and malfunction status.
-     * 
-     * @return a string representation of the bill
-     */
+
+    public double  getFare()         { return fare; }
+    public String  getVehicleType()  { return vehicleType; }
+    public boolean isMalfunction()   { return malfunction; }
+
     @Override
     public String toString() {
-        return "Bill Information:\n" +
-                "Total: $" + String.format("%.2f", total) + "\n" +
-                "Vehicle Type: " + vehicleType + "\n" +
-                "Passenger: " + passenger.getName() + "\n" +
-                "Malfunction: " + (malfunction ? "Yes" : "No") + 
-                "\n"; 
+        return "=== Bill ===\n"
+             + String.format("Fare         : $%.2f%n", fare)
+             + "Vehicle type : " + vehicleType + "\n"
+             + "Passenger    : " + passenger.getName() + "\n"
+             + "Malfunction  : " + (malfunction ? "Yes — fare waived" : "No");
     }
 }

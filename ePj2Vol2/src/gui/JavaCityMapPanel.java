@@ -40,7 +40,7 @@ public class JavaCityMapPanel extends JPanel {
         for (int i = 0; i < JavaCityMap.NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < JavaCityMap.NUMBER_OF_COLUMNS; j++) {
             	// Color cells based on their row index
-                if (i <= JavaCityMap.WIDE_PART_OF_THE_CITY_UPPER_BOUND) {
+                if (i <= JavaCityMap.DOWNTOWN_UPPER_ROW) {
                     g.setColor(Color.BLUE); // First color
                 } else {
                     g.setColor(Color.GREEN); // Second color

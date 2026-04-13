@@ -3,29 +3,24 @@ package utility;
 import java.util.Random;
 
 /**
- * @author AT95
- * @version 1
- * Utility class for generating random strings.
+ * Generates random alphanumeric strings, used for driving licences and ID numbers.
  */
 public class RandomStringGenerator {
-	
-	/**
-     * Generates a random string of specified length using alphanumeric characters.
+
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final Random RANDOM   = new Random();
+
+    /**
+     * Returns a random alphanumeric string of the requested length.
      *
-     * @param length The length of the random string to generate.
-     * @return A randomly generated string.
+     * @param length number of characters
+     * @return the generated string
      */
     public static String generateRandomString(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
-
         for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            char randomChar = characters.charAt(randomIndex);
-            sb.append(randomChar);
+            sb.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
-
         return sb.toString();
     }
 }
