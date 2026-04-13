@@ -1,171 +1,210 @@
-# ePJ2: E-Mobility Rental System  
+# ePJ2 — JavaCity Fleet Operations Dashboard
 
-ePJ2 is a rental system for electric cars, bicycles, and scooters designed to simulate the company’s operations in the city of Java. It manages vehicle rentals, monitors vehicle status, and generates financial reports based on predefined data.  
-
----
-
-## 📋 Project Overview  
-
-The system tracks three types of vehicles:  
-- **Electric Cars**  
-- **Electric Bicycles**  
-- **Electric Scooters**
-
-The following data is managed for each vehicle:  
-- **Cars**: ID, purchase date, cost, manufacturer, model, battery level, passenger capacity.  
-- **Bicycles**: ID, manufacturer, model, battery level, cost, range per charge.  
-- **Scooters**: ID, manufacturer, model, battery level, cost, maximum speed.  
-
-Vehicles may break down, and the system records breakdown details such as date, time, and description. Users can rent vehicles, and the system calculates rental costs, applies discounts, and generates invoices in text format.  
+ePJ2 is an electric vehicle rental simulation system for the fictional city of **JavaCity**.  
+It manages a fleet of cars, bikes, and scooters across a real-time 20×20 city grid, calculates rental fares, tracks malfunctions, and produces financial reports — all through a dark tactical HUD-style GUI built with Java Swing.
 
 ---
 
-## 🛠 Features  
+## 🖥️ Screenshots
 
-1. **Vehicle Management**  
-   - Track battery levels and recharge vehicles.  
-   - Simulate battery drain during rides.  
-   - Record and manage breakdowns.  
+### Main Dashboard — Idle
+> The dashboard on startup, before a simulation is launched.
 
-2. **Rental System**  
-   - Track rentals with user information, pickup and drop-off locations, and duration.  
-   - Apply special conditions for rentals:
-     - **Wide/Narrow Area Rates**: Different rates based on location.
-     - **Breakdowns**: Rental cost = 0 if a breakdown occurs.
-     - **Discounts**: Every 10th rental applies a discount.
-     - **Promotions**: Apply special discounts during promotions.  
-   - Generate invoices in `.txt` format with detailed itemization.  
-
-3. **Real-Time Simulation**  
-   - Simulate vehicle movement on a **20x20 grid map**.  
-   - Display vehicle position, ID, and battery level during movement.  
-   - Manage simulations with **threads** for each rental.  
-   - Execute rentals in **chronological order** with a 5-second pause between batches.
-
-4. **Financial Reports**  
-   - Generate **daily** and **summary** reports showing:  
-     - Total revenue, discounts, and promotions.  
-     - Maintenance and repair costs.  
-     - Company expenses and taxes.  
+![Dashboard idle](screenshots/dashboard_idle.png)
 
 ---
 
-## 🎛 Graphical User Interfaces (GUI)  
+### Simulation Running
+> Vehicles moving across the city grid in real time. Green = Scooter, Red = Car, Yellow = Bike.  
+> The SIM LOG panel on the right streams dispatch events live.
 
-The program uses **JavaFX** or **Swing** to display:  
-- **Main Map View**: Shows vehicle movements in real-time.  
-- **Vehicle Overview**: Displays all available vehicles in a tabular format.  
-- **Breakdown Log**: Logs all breakdowns with time, type, and description.  
-- **Business Results**: Displays financial reports (daily and summary).  
+![Simulation running](screenshots/simulation_running.png)
 
 ---
 
-## 📁 Data Management  
+### After Simulation — Monitors Updated
+> Sales, Salary, and Repair monitors filled with results after the simulation completes.
 
-1. **Configuration Files**  
-   - Rental rates, discounts, and promotions are stored in **properties files**.  
-   - Example: [Java Properties](https://www.baeldung.com/java-properties)  
-
-2. **Binary Serialization**  
-   - The project includes additional data-saving features:
-     1. Vehicles with the **highest revenue**.
-     2. Vehicles with the **most losses**.
-     3. Vehicles with **breakdowns and repair costs**.
-   - Serialized data is saved as binary files, and the GUI provides an option to **deserialize and display** them.  
-
-3. **Test Data**  
-   - Rental data is provided through the **Moodle** platform.  
-   - Rentals are processed sequentially, simulating operations in real-time.
+![Monitors filled](screenshots/monitors_filled.png)
 
 ---
 
-## 📊 Reports  
+## 🚀 How to Run (Eclipse IDE)
 
-### Summary Report  
-The summary report includes the following data:
-1. **Total Revenue**: Sum of all payments.  
-2. **Total Discounts**: Sum of all applied discounts.  
-3. **Total Promotions**: Sum of promotional values.  
-4. **Revenue by Area**: Revenue for the narrow and wide city areas.  
-5. **Maintenance Cost**: 20% of total revenue.  
-6. **Repair Costs**: Based on vehicle type:
-   - Cars: 7% of purchase cost.
-   - Bicycles: 4% of purchase cost.
-   - Scooters: 2% of purchase cost.  
-7. **Company Expenses**: 20% of total revenue.  
-8. **Taxes**: 10% of the net profit.
+> **Recommended environment: Eclipse IDE for Java Developers**
 
-### Daily Reports  
-The daily reports include the same metrics but grouped by **rental date**.
+### Step 1 — Import the project
+1. Open Eclipse.
+2. Go to **File → Import → Existing Projects into Workspace**.
+3. Select the root folder of the repository and click **Finish**.
 
----
-
-## 🎯 Additional Functionality  
-
-Based on your **student index**, one of the following features must be implemented:  
-1. **Highest Revenue Vehicles**: Identify the vehicle with the highest revenue for each type.  
-2. **Highest Loss Vehicles**: Identify the vehicle with the most significant losses.  
-3. **Breakdown and Repair Costs**: List vehicles with breakdowns and their repair costs.  
-
----
-
-## 🚀 How to Run  
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/your-username/epj2-rental-system.git
-   cd epj2-rental-system
-   ```
-
-2. **Setup Properties File**:
-   Ensure the **properties file** is correctly configured with rental rates, discounts, and promotions.
-
-3. **Compile and Run the Program**:
-   ```bash
-   javac -d bin src/*.java
-   java -cp bin Main
-   ```
-
-4. **Use the GUI**: Navigate through the main map, vehicle list, breakdown logs, and financial reports.
-
----
-
-## 📑 Project Structure  
+### Step 2 — Ensure the CSV data files are in the project root
+Place the following files directly in the **project root** (same level as `src/`):
 
 ```
-epj2-rental-system/
+PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv    ← vehicle data
+PJ2 - projektni zadatak 2024 - Iznajmljivanja.csv        ← rental data
+```
+
+### Step 3 — Run the application
+1. In the **Package Explorer**, expand `src → gui`.
+2. Right-click `MainWindow.java`.
+3. Select **Run As → Java Application**.
+4. The dashboard window will open.
+
+### Step 4 — Start the simulation
+Click the **▶ START SIMULATION** button in the bottom-right corner of the dashboard.  
+The simulation will:
+- Load all vehicles and rentals from the CSV files.
+- Dispatch each vehicle as a separate thread.
+- Animate vehicle movement live on the city map.
+- Stream log events to the SIM LOG panel.
+- Fill the SALES, SALARY, and REPAIRS monitors when done.
+- Open a popup showing the most loss-making vehicle type.
+
+---
+
+## 📋 Project Overview
+
+The system tracks three types of electric vehicles:
+
+| Type | Battery | Map Colour |
+|------|---------|------------|
+| Car | 300 units | 🔴 Red |
+| Bike | 200 units | 🟡 Yellow |
+| Scooter | 100 units | 🟢 Green |
+
+Each vehicle is a **Java thread** — it moves step-by-step across the 20×20 grid, drains its battery per step, and generates a **Bill** for its passenger on arrival.
+
+---
+
+## 🛠️ Features
+
+### 1 — Vehicle Management
+- Three vehicle subclasses: `Car`, `Bike`, `Scooter` (extend abstract `Vehicle extends Thread`).
+- `VehicleType` enum replaces all raw type strings (`"automobil"`, `"bicikl"`, `"trotinet"`).
+- Each vehicle exposes a `getMapColor()` method — the map panel uses polymorphism to colour cells with zero `instanceof` checks.
+- Battery charges and discharges per movement step; two bugs in the original `Battery` class were fixed during refactoring.
+
+### 2 — Rental System
+- Rentals are loaded from a CSV file, validated, deduplicated, and sorted chronologically.
+- Fare calculation accounts for: base unit price per vehicle type, wide/narrow city zone multiplier, every-10th-rental promotional discount, and malfunction waiver.
+- Passengers are randomly assigned as `Local` (national ID) or `Stranger` (passport).
+- A `Bill` is generated and attached to each passenger at trip end.
+
+### 3 — Real-Time Simulation
+- Each vehicle runs on its own `Thread`.
+- The city grid is a `20×20` array of `Object` cells protected by per-cell `ReentrantLock`s.
+- The map repaints at ~30 fps via a Swing `Timer`.
+- Vehicle movement is logged live in the SIM LOG panel.
+
+### 4 — Financial Reports (Monitors)
+Three monitors update automatically after the simulation ends:
+
+| Monitor | Tracks |
+|---------|--------|
+| **SALES** | Number of rentals per vehicle type |
+| **SALARY** | Total revenue, discount revenue, promotion revenue |
+| **REPAIRS** | Repair costs per vehicle type (7% / 4% / 2% of purchase price) |
+
+The most loss-making vehicle type is serialized to `Reports/MostLossMakingVehicles.ser` and deserialized into a popup window.
+
+---
+
+## 🎨 GUI Design
+
+The interface follows a **dark tactical HUD** aesthetic — think mission control for a smart city.
+
+| Element | Description |
+|---------|-------------|
+| Title bar | App name in electric cyan + live `HH:mm:ss` clock |
+| SALES / SALARY / REPAIRS panels | Left column, stacked flush, each with a titled header strip |
+| CITY MAP | Centre panel — dark grid, glowing vehicle cells, dashed zone boundary |
+| SIM LOG | Right panel — live scrolling dispatch log |
+| Bottom bar | Vehicle legend, status text, glowing START button |
+
+All design tokens (colours, fonts) live in `AppTheme.java`. Changing one value propagates everywhere.
+
+---
+
+## 📁 Project Structure
+
+```
+ePJ2/
 │
-├── src/                     # Source code
-│   ├── vehicles/            # Vehicle classes (Cars, Bikes, Scooters)
-│   ├── rental/              # Rental processing logic
-│   ├── reports/             # Report generation logic
-│   ├── gui/                 # JavaFX/Swing interfaces
-│   └── Main.java            # Application entry point
+├── src/
+│   ├── battery/          Battery, BatteryException
+│   ├── bill/             Bill
+│   ├── data/             VehicleDataLoader, RentalDataLoader
+│   ├── gui/              MainWindow, MapPanel, AppTheme, GlowButton,
+│   │                     LossMakingVehiclesWindow
+│   ├── javacitymap/      JavaCityMap, JavaCityMapException
+│   ├── malfunction/      Malfunction
+│   ├── model/            Vehicle (abstract), Car, Bike, Scooter, VehicleType
+│   ├── monitor/          RentalSalesMonitor, RentalSalaryMonitor,
+│   │                     RentalRepairCostsMonitor
+│   ├── passenger/        Passenger (abstract), Local, Stranger
+│   ├── rental/           Rental
+│   └── utility/          ConfigFileCreator, ConfigFileReader,
+│                         Serializer, Deserializer, RandomStringGenerator
 │
-├── properties/              # Configuration files (rental rates, discounts)
-├── invoices/                # Generated invoices (TXT format)
-└── README.md                # Project documentation
+├── Reports/              Serialized binary output (auto-created at runtime)
+├── config.properties     Auto-generated pricing config
+├── PJ2 - projektni zadatak 2024 - Prevozna sredstva.csv
+├── PJ2 - projektni zadatak 2024 - Iznajmljivanja.csv
+└── README.md
 ```
 
 ---
 
-## 💡 Best Practices  
+## 🔧 Key Refactoring Changes
 
-- Add **JavaDoc comments** to all classes and methods and generate documentation.  
-- Use **packages** for better code organization.  
-- Avoid code duplication and ensure efficient performance.  
-- Follow proper naming conventions for classes, methods, and variables.
+This project was significantly refactored from the original submission. Notable improvements:
+
+- **`VehicleType` enum** — eliminates all raw Bosnian string literals scattered across six files.
+- **Bug fix: `Battery.charge()`** — original code always added 100 instead of the `amount` argument.
+- **Bug fix: `Battery.setChargeLevel()`** — original guard condition `0 < status && status >= 100` was logically impossible (nothing could satisfy it).
+- **Thread-safe monitors** — `AtomicLong` / `DoubleAdder` replace plain `static double` fields.
+- **`getMapColor()` polymorphism** — `MapPanel` has no `instanceof` chain; each vehicle subclass declares its own colour.
+- **Billing extracted** — fare calculation moved out of `Vehicle.run()` into a dedicated `generateBill()` method.
+- **Deleted dead code** — `proba/` package (commented-out scratch tests) and duplicate `user/` package removed entirely.
+- **All identifiers translated to English** — no Bosnian/Serbian variable or method names remain in the codebase.
+
+---
+
+## 📑 Configuration
+
+`config.properties` is auto-created on first run by `ConfigFileCreator`. Default values:
+
+```properties
+CAR_UNIT_PRICE     = 0.05
+BIKE_UNIT_PRICE    = 0.02
+SCOOTER_UNIT_PRICE = 0.01
+DISTANCE_WIDE      = 1.5
+DISTANCE_NARROW    = 1.0
+DISCOUNT           = 0.1
+DISCOUNT_PROM      = 0.05
+```
 
 ---
 
-## 🛡 License  
+## 💡 Best Practices Applied
 
-This project is developed as part of the **Programski jezici 2** course at the **Elektrotehnički fakultet, Banja Luka**.
+- Full **JavaDoc** on all public classes and methods.
+- **Packages** for every logical layer.
+- **Single Responsibility** — data loading, simulation, billing, and monitoring are separate concerns.
+- **`ReentrantLock`** per grid cell for fine-grained thread safety.
+- **`Collections.synchronizedList`** for shared vehicle lists in monitors.
+
+---
+
+## 🛡️ License
+
+Developed as part of the **Programski jezici 2** course at  
+**Elektrotehnički fakultet, Banja Luka**.
 
 ---
 
-## 👥 Contributors  
+## 👥 Contributors
 
-- **Andrej Trožić** – Student at Elektrotehnički fakultet, Banja Luka  
-
----
+- **Andrej Trožić** — Student, Elektrotehnički fakultet Banja Luka
